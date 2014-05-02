@@ -1,3 +1,3 @@
-<?php
-
-echo "coming soon!";
+<?php
+
+echo "coming soon!";
