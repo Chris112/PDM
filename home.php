@@ -1,9 +1,9 @@
 <!DOCTYPE html>
 <html lang="en">
     <head>
-		<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
         <title>Home</title>
-		
+
         <meta charset="utf-8">
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
         <meta name="viewport" content="width=device-width, initial-scale=1"> 
@@ -60,8 +60,8 @@
                         echo "<tr>";
                         echo "<td>" . $row['userID'] . "</td>";
                         echo "<td>" . $row['name'] . "</td>";
-						echo "<td>" . $row['email'] . "</td>";
-						echo "<td>" . $row['password'] . "</td>";
+                        echo "<td>" . $row['email'] . "</td>";
+                        echo "<td>" . $row['password'] . "</td>";
                         echo "</tr>";
                     }
 
