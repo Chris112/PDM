@@ -29,10 +29,16 @@ include 'commonElements.php';
 
         <?php displayHeader() ?>
         <div align="center">
-            <h3> Projects within the <?php echo lookupFacName($_SESSION['currUser']['facID']); ?> faculty</h3> 
+            <?php
+            if (!is_null($_SESSION['currUser']['facID'])) {
+                echo "<h3> Projects within the <?php echo lookupFacName(" . $_SESSION['currUser']['facID'] . "faculty</h3> ";
+            } else {
+                echo "<h3> All Projects from all Faculties</h3>";
+            }
+            ?>
         </div>
 
-        <?php displayNavbar() ?>
+<?php displayNavbar() ?>
 
 
 
@@ -46,8 +52,12 @@ include 'commonElements.php';
                     echo "Failed to connect to MySQL: " . mysqli_connect_error();
                 }
 
-                // Select all projects from the faculty that currUser is from and print them out in panels
-                $result = mysqli_query($con, "SELECT * FROM Projects WHERE facID={$_SESSION['currUser']['facID']}");
+                // If CurrUser is admin, print out all projects, otherwise, print out all projects of CurrUsers faculty
+                if (!is_null($_SESSION['currUser']['facID'])) {
+                    $result = mysqli_query($con, "SELECT * FROM Projects WHERE facID={$_SESSION['currUser']['facID']}");
+                } else {
+                    $result = mysqli_query($con, "SELECT * FROM Projects");
+                }
 
                 // Loop though all projects and lookup information about them
                 while ($row = mysqli_fetch_array($result)) {
@@ -71,13 +81,14 @@ include 'commonElements.php';
                     echo "</div> </div> </div>";
                 }// end while
 
+
                 mysqli_close($con);
                 ?>
 
             </div>
         </div>
 
-        <?php displayFooter(); ?>
+<?php displayFooter(); ?>
 
         <!-- Include all compiled plugins (below), or include individual files as needed -->
         <script src="js/jquery-1.11.0.min.js"></script>
