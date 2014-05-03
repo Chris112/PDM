@@ -47,6 +47,20 @@
 		<link href="css/bootstrap.min.css" rel="stylesheet">
 		<!-- Custom styles for footer -->
 		<link href="css/sticky-footer-navbar.css" rel="stylesheet"> 
+		
+		<style type="text/css">
+			#panel panel-primary
+			{
+				width: 960px;
+				background: #FFFFFF;
+				margin: 100 auto;
+				border: 1px solid #000000;
+				text-align: left;
+				height: 720px;
+				max-width: 960px;
+				max-height: 720px;
+			} 
+		</style>
 	</head>
 	<body>
 		<div class="page-header">

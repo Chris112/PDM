@@ -96,7 +96,7 @@ function displayFooter() {
 
     echo "<div class = \"container\" align = \"center\">";
 
-    echo "<p class = \"text-muted\">Copywrite Don Squad Storage Manager DSSM Â© Curtin</p>";
+    echo "<p class = \"text-muted\">Copywrite Don Squad Storage Manager DSSM © Curtin</p>";
 
     echo "</div>";
 

@@ -8,6 +8,9 @@ if (empty($_SESSION[$access])) {
     header("location:login.php");
 
     die();
+} else if ($_SESSION['currUser']['site_level'] == 1) {
+    // Page is only avilable to admins/approvers, if user is a researcher, direct to ProjectSelection
+    header("location:ProjectSelection.php");
 }
 
 include 'dbFunctions.php';
@@ -60,7 +63,7 @@ include 'commonElements.php';
                 <div class="panel-body">
                     <ul class="nav nav-pills nav-stacked">
                         <li class="active"><a href="#">Faculty Selection</a></li>
-                        <li class="ProjectSelection.php"><a href=\"#">Project Selection</a></li>
+                        <li><a href="ProjectSelection.php">Project Selection</a></li>
                         <li><a href="#">Approve Requests</a></li>
                         <li><a href="#">Pending Requests</a></li>
                         <li><a href="storageRequest.php">Storage Request</a></li>
@@ -106,7 +109,7 @@ include 'commonElements.php';
                     while ($row = mysqli_fetch_array($result)) {
                         echo "<tr>";
                         echo "<td>" . $row['facID'] . "</td>";
-                        echo "<td><a href=\"Faculty.php?action=" . $row['name'] . "\">" . $row['name'] . "</a></td>";
+                        echo "<td><a href=\"ProjectSelection.php?action=" . $row['name'] . "\">" . $row['name'] . "</a></td>";
                         echo "<td>" . lookupUserName($row['approver']) . "</td>";
                         echo "<td>" . $row['free_space'] . "</td>";
                         echo "<td>" . $row['used_space'] . "</td>";
