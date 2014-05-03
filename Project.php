@@ -54,6 +54,13 @@ include 'commonElements.php';
         <?php
         echo "Display information about the " . $_GET['action'] . " project here.";
         ?>
+        <div class="panel panel-default">
+  			<div class="panel-heading">PROJECT TITLE</div>	<!--Need PHP-->
+  			<table class="table">
+   		 	<!--PHP-->
+  			</table>
+		</div>
+        
 
         <!-- End Content -->
 
