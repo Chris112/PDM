@@ -24,10 +24,13 @@ $row = mysqli_fetch_array($result, MYSQLI_ASSOC);
 if ($row['userID'] == $userID && $row['password'] == $password) {
     $_SESSION['currUser'] = $row;
     $_SESSION[$access] = "access";
-    header('Location: projectSelection.php');
+    /* Take admin to FacultySelection, Appr and Researcher to ProjectSelection */
+    if ($_SESSION['currUser']['site_level'] == 3) {
+        header('Location: FacultySelection.php');
+    } else {
+        header('Location: ProjectSelection.php');
+    }
 } else {
     header('Location: login.php');
 }
-
-
 ?>

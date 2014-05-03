@@ -55,7 +55,21 @@ include 'commonElements.php';
 
         <?php displayHeader() ?>
 
-        <?php displayNavbar() ?>
+        <div class="col-md-2">
+            <div class="panel panel-primary">
+                <div class="panel-body">
+                    <ul class="nav nav-pills nav-stacked">
+                        <li class="active"><a href="#">Faculty Selection</a></li>
+                        <li class="ProjectSelection.php"><a href=\"#">Project Selection</a></li>
+                        <li><a href="#">Approve Requests</a></li>
+                        <li><a href="#">Pending Requests</a></li>
+                        <li><a href="storageRequest.php">Storage Request</a></li>
+                        <br><br>
+                        <li><a href="logout.php">Log out</a></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
 
 
 
@@ -97,16 +111,10 @@ include 'commonElements.php';
                         echo "<td>" . $row['free_space'] . "</td>";
                         echo "<td>" . $row['used_space'] . "</td>";
                         echo "<td>" . $row['total_space'] . "</td>";
-                        //echo "<td> <a href=\"projectSelection.php\">Details</a>   </td>";
-                      //  $_SESSION['Faculties'][$row['name']] = $row['name'];
-                        
-                       // echo "<a href=\"index.php?action=logout\">Logout</a>";
-
 
                         $sumTotal += $row['free_space'];
                         $sumUsed += $row['used_space'];
                         $sumFree += $row['total_space'];
-                        //$_SESSION['Selected_Project'] = $row;
                     }
                     echo "<tr>";
                     echo "<td></td>";

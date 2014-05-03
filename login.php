@@ -29,7 +29,7 @@ include 'commonElements.php';
 
         <!-- Header -->
         <div class="container">
-            <div class="page-header">
+            <div class="page-header panel-primary">
                 <div align="center">
                     <h1>The Dons Squad <small> <br>Storage Manager</h1>
                             </div>
@@ -44,7 +44,7 @@ include 'commonElements.php';
                                     <input type="text" class="form-control" placeholder="User ID" name="userID" required autofocus/>
                                     <input type="password" class="form-control" placeholder="Password" required name="password"/>
                                     <label class="checkbox">
-                                        <input type="checkbox" value="remember-me" > Remember me
+                                        <input type="checkbox" value="remember-me" > Remember my UserID
                                     </label>
                                     <button class="btn btn-lg btn-primary btn-block" type="submit" name="Submit1" value="Login">Sign in</button>
                                 </form>
