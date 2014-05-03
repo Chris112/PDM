@@ -53,6 +53,7 @@ include 'commonElements.php';
         <!-- Content -->
         <?php
         echo "Display information about the " . $_GET['action'] . " project here.";
+        echo "TESTING";
         ?>
         <div class="panel panel-default">
   			<div class="panel-heading">PROJECT TITLE</div>	<!--Need PHP-->
