@@ -50,18 +50,13 @@ include 'commonElements.php';
         
         
         <!-- Main Panel area -->
-        <div class="container">
-            
-        <div class="col-md-10">	
+        <div class="col-md-9">	
             <div class="panel panel-primary">
                 <div class="panel-heading">
-                    <?php
-                    echo "<h3>" . $_GET['action'] . "</h3>";
-                    ?>
+                    <h3>Project Title</h3>
                 </div>
-                <div class="panel-body">
                 
-                <div class="col-md-4">          
+                <div class="col-md-3">          
                     <div class="pie-chart">
                       <?php
                       $con = mysqli_connect('localhost', 'samcalab_chriswb', 'uz,vt78?zYpwu*CV6', 'samcalab_uniproject');
@@ -73,16 +68,13 @@ include 'commonElements.php';
                       $result = mysqli_query($con, "SELECT * FROM Users");
 
                       //PIE CHART
-                     echo "<div class=\"well well-sm\" ><font size=\"4\"> <center>Available: XX GB<br> Used: XX GB<br> Free: XX GB</center></font></div>";
-                     echo "<center><button type=\"button\" class=\"btn btn-default\">View Storage</button></center>";
-                     echo "<center><button type=\"button\" class=\"btn btn-default\">Request Additional Storage</button></center>";
 
                      mysqli_close($con);
                      ?>
                     </div>
                 </div>
                 
-                <div class="col-md-4">
+                <div class="col-md-3">
                     <div class="data-managers">
                       
                         <h3>Data Managers</h3>
@@ -93,9 +85,8 @@ include 'commonElements.php';
                         if (mysqli_connect_errno()) {
                           echo "Failed to connect to MySQL: " . mysqli_connect_error();
                         }
-                         
-                        
-                         $dataManagers = mysqli_query($con, "SELECT * FROM User_Projects WHERE projID = " . lookupProjID($_GET['action']) . " AND permissions > 3" );
+
+                         $result = mysqli_query($con, "SELECT * FROM Users");
 
                         echo "<table class=\"table\">
                         <tr>
@@ -103,25 +94,21 @@ include 'commonElements.php';
                         <th>Name</th>
                         </tr>";
 
-                        while ($row = mysqli_fetch_array($dataManagers)) {
+                        while ($row = mysqli_fetch_array($result)) {
                             echo "<tr>";
                             echo "<td>" . $row['userID'] . "</td>";
-                            echo "<td>" . lookupUserName($row['userID']) . "</td>";
+                            echo "<td>" . $row['name'] . "</td>";
                             echo "</tr>";
                         }
 
                         echo "</table>";
-                        echo "<br>";
-                        echo "<center><button type=\"button\" class=\"btn btn-default\">Add Data Manager</button></center></center>";
-                        echo "<center><button type=\"button\" class=\"btn btn-default\">Remove Data Manager</button></center>";
-                        
+
                         mysqli_close($con);
                         ?>
                     </div>
                 </div>
-                    
-              
-                <div class="col-md-4">
+                
+                <div class="col-md-6">
                     <div class="collaborators">
                     <h3>Collaborators</h3>
 
@@ -132,7 +119,7 @@ include 'commonElements.php';
                           echo "Failed to connect to MySQL: " . mysqli_connect_error();
                       }
 
-                      $collaborators = mysqli_query($con, "SELECT * FROM User_Projects WHERE projID = " . lookupProjID($_GET['action']) . " AND permissions <= 3" );
+                      $result = mysqli_query($con, "SELECT * FROM Users");
 
                       echo "<table class=\"table\">
                       <tr>
@@ -141,8 +128,9 @@ include 'commonElements.php';
                       <th><center>Write</center></th>
                       </tr>";
 
-                     while ($row = mysqli_fetch_array($collaborators)) {
+                     while ($row = mysqli_fetch_array($result)) {
                          echo "<tr>";
+<<<<<<< HEAD
                          echo "<td>" . lookupUserName($row['userID']) . "</td>";
                          if ($row['permissions'] = 3) {
                             echo "<td> <center><input type=\"checkbox\" class=\"read\" checked=\"checked\"/></center> </td>";
@@ -162,17 +150,18 @@ include 'commonElements.php';
                          }
                          echo "</tr>"; 
                          
+=======
+                         echo "<td>" . $row['name'] . "</td>";
+                         echo "<td> <center><input type=\"checkbox\" class=\"checkbox\"/></center> </td>";
+                         echo "<td> <center><input type=\"checkbox\" class=\"checkbox\"/></center> </td>";
+                         echo "</tr>";
+>>>>>>> parent of 4d3a9be... backup before installing extended bootstrap
                      }
 
                      echo "</table>";
-                     echo "<br>";
-                     echo "<center><button type=\"button\" class=\"btn btn-default\">Add Collaborator</button></center>";
-                     echo "<center><button type=\"button\" name=\"testing\" class=\"btn btn-default\">Remove Collaborator</button></center>";                    
-                     echo "<center><button type=\"button\" class=\"btn btn-default\">Promote to Data Manager</button></center>";
-                    // if(isset($_POST['testing'])) {
-                     //    echo "<center><button type=\"button\" class=\"btn btn-default\">Promote to Data Manager</button></center>";
-                    // }
-                     
+                     echo "<br><br>";
+                     echo "<button type=\"submit\" class=\"btn btn-default\">Submit</button>";
+                     echo "<button type=\"submit\" class=\"btn btn-default\">Submit</button>";
                      
                      mysqli_close($con);
                      ?>
@@ -180,16 +169,13 @@ include 'commonElements.php';
                 </div>
                 
             </div>
-            </div>
+   
         </div>
-    
-   </div>
-        
 
 
 
 
-        <br><br><br>
+
         <?php displayFooter(); ?>
 
         <!-- Include all compiled plugins (below), or include individual files as needed -->
@@ -206,3 +192,6 @@ include 'commonElements.php';
 
 
 </html>
+
+
+

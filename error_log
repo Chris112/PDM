@@ -907,6 +907,7 @@
 [02-May-2014 14:11:49 Asia/Singapore] PHP Fatal error:  Function name must be a string in /home/samcalab/public_html/hosting/themailforward.com/PDM/storageRequest.php on line 28
 [02-May-2014 14:12:00 Asia/Singapore] PHP Fatal error:  Function name must be a string in /home/samcalab/public_html/hosting/themailforward.com/PDM/storageRequest.php on line 28
 [02-May-2014 14:12:06 Asia/Singapore] PHP Fatal error:  Function name must be a string in /home/samcalab/public_html/hosting/themailforward.com/PDM/storageRequest.php on line 28
+<<<<<<< HEAD
 [05-May-2014 14:33:29 Asia/Singapore] PHP Warning:  mysqli_fetch_array() expects parameter 1 to be mysqli_result, boolean given in /home/samcalab/public_html/hosting/themailforward.com/PDM/dbFunctions.php on line 115
 [05-May-2014 14:34:54 Asia/Singapore] PHP Warning:  mysqli_fetch_array() expects parameter 1 to be mysqli_result, boolean given in /home/samcalab/public_html/hosting/themailforward.com/PDM/dbFunctions.php on line 115
 [05-May-2014 14:38:00 Asia/Singapore] PHP Parse error:  syntax error, unexpected $end in /home/samcalab/public_html/hosting/themailforward.com/PDM/Project.php on line 196
@@ -916,3 +917,5 @@
 [05-May-2014 15:11:47 Asia/Singapore] PHP Warning:  mysqli_fetch_array() expects parameter 1 to be mysqli_result, boolean given in /home/samcalab/public_html/hosting/themailforward.com/PDM/Project.php on line 106
 [05-May-2014 15:36:12 Asia/Singapore] PHP Warning:  mysqli_fetch_array() expects parameter 1 to be mysqli_result, boolean given in /home/samcalab/public_html/hosting/themailforward.com/PDM/Project.php on line 106
 [05-May-2014 15:36:12 Asia/Singapore] PHP Warning:  mysqli_fetch_array() expects parameter 1 to be mysqli_result, boolean given in /home/samcalab/public_html/hosting/themailforward.com/PDM/Project.php on line 144
+=======
+>>>>>>> parent of 4d3a9be... backup before installing extended bootstrap
