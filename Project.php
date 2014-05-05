@@ -144,20 +144,62 @@ include 'commonElements.php';
                      while ($row = mysqli_fetch_array($collaborators)) {
                          echo "<tr>";
                          echo "<td>" . lookupUserName($row['userID']) . "</td>";
-                         echo "<td> <center><input type=\"checkbox\" class=\"checkbox\"/></center> </td>";
-                         echo "<td> <center><input type=\"checkbox\" class=\"checkbox\"/></center> </td>";
-                         echo "</tr>";
+                         if ($row['permissions'] == 3) {
+                            echo "<td> <center><input type=\"checkbox\" name=\"read".$row['userID']."\" checked=\"checked\"/></center> </td>";
+                            echo "<td> <center><input type=\"checkbox\" name=\"write".$row['userID']."\" checked=\"checked\"/></center> </td>";                               
+                         }
+                         else if ($row['permissions'] == 2) {
+                            echo "<td> <center><input type=\"checkbox\" name=\"read".$row['userID']."\"/></center> </td>";
+                            echo "<td> <center><input type=\"checkbox\" name=\"write".$row['userID']."\" checked=\"checked\"/></center> </td>";
+                         }
+                          else if ($row['permissions'] == 1) {
+                            echo "<td> <center><input type=\"checkbox\" name=\"read".$row['userID']."\" checked=\"checked\"/></center> </td>";
+                            echo "<td> <center><input type=\"checkbox\" name=\"write".$row['userID']."\"/></center> </td>";
+                         }
+                         else {
+                            echo "<td> <center><input type=\"checkbox\" name=\"read".$row['userID']."\"/></center> </td>";
+                            echo "<td> <center><input type=\"checkbox\" name=\"write".$row['userID']."\"/></center> </td>";
+                         }
+                         echo "</tr>"; 
                      }
 
                      echo "</table>";
                      echo "<br>";
-                     echo "<center><button type=\"button\" class=\"btn btn-default\">Add Collaborator</button></center>";
-                     echo "<center><button type=\"button\" name=\"testing\" class=\"btn btn-default\">Remove Collaborator</button></center>";                    
-                     echo "<center><button type=\"button\" class=\"btn btn-default\">Promote to Data Manager</button></center>";
-                    // if(isset($_POST['testing'])) {
-                     //    echo "<center><button type=\"button\" class=\"btn btn-default\">Promote to Data Manager</button></center>";
-                    // }
                      
+                     echo "<center><button type=\"button\" class=\"btn btn-default\">Add Collaborator</button></center>";
+                     echo "<center><button type=\"button\" class=\"btn btn-default\"btn btn-default\">Remove Collaborator</button></center>";                    
+                     echo "<center><button type=\"button\" class=\"btn btn-default\">Promote to Data Manager</button></center>";
+                     echo "<center><button type=\"button\" name=\"SaveChanges\" class=\"btn btn-default\">Save Changes</button></center>";
+
+                     /*
+                     echo "filter_input(INPUT_POST, read".$row['userID'].")";
+                     
+                     if (isset($_POST['SaveChanges'])) {
+                        while ($row = mysqli_fetch_array($collaborators)) {
+                            if (isset($_POST['read'.$row['userID']]) and isset($_POST['write'.$row['userid']])) {
+                                if ($_POST['permissions'] != 3) {
+                                    mysqli_query($con, "ALTER TABLE User_Projects SET permissions=3 WHERE userID=".$row['userID']);
+                                }
+                            }
+                            else if (!isset($_POST['read'.$row['userID']]) and isset($_POST['write'.$row['userid']])) {
+                                if ($_POST['permissions'] != 2) {
+                                    mysqli_query($con, "ALTER TABLE User_Projects SET permissions=2 WHERE userID=".$row['userID']);
+                                }
+                            }    
+                            else if (isset($_POST['read'.$row['userID']]) and !isset($_POST['write'.$row['userid']])) {
+                                if ($_POST['permissions'] != 1) {
+                                    mysqli_query($con, "ALTER TABLE User_Projects SET permissions=1 WHERE userID=".$row['userID']);
+                                }
+                            }
+                            else{
+                                if ($_POST['permissions'] != 0) {
+                                    mysqli_query($con, "ALTER TABLE User_Projects SET permissions=0 WHERE userID=".$row['userID']);
+                                }
+                            }
+                            
+                        }
+                     }*/
+            
                      
                      mysqli_close($con);
                      ?>
