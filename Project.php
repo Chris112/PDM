@@ -2,7 +2,7 @@
 session_start();
 if (empty($_SESSION[$access])) {
     header("location:login.php");
-    //dieHard2();
+    //dieHard3();
 }
 include 'dbFunctions.php';
 include 'commonElements.php';
