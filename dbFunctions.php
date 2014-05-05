@@ -99,6 +99,26 @@ function lookupProjName($projID) {
     }
 }
 
+function lookupProjID($projName) {
+
+    $con = mysqli_connect('localhost', 'samcalab_chriswb', 'uz,vt78?zYpwu*CV6', 'samcalab_uniproject');
+
+    if (mysqli_connect_errno()) {
+
+        echo "Failed to connect to MySQL: " . mysqli_connect_error();
+    } else {
+
+        $query = "SELECT projID FROM Projects WHERE name=\"$projName\"";
+        $result = mysqli_query($con, $query);
+
+        $row = mysqli_fetch_array($result, MYSQLI_ASSOC);
+
+        mysqli_close($con);
+
+        return $row['projID'];
+    }
+}
+
 // input userID and returns the date they registered in the database
 
 function lookupUserRegDate($userID) {

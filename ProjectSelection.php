@@ -30,7 +30,7 @@ include 'commonElements.php';
         <!-- Display header -->
         <?php displayHeader() ?>
         <!-- End display header -->
-
+        
         <!-- Printing the title of the page --> 
         <div align="center">
             <?php
