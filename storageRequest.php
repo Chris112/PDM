@@ -19,16 +19,13 @@
 	$projID = $_POST[""];
 	$facID = $_POST[""];
 	$reqType = $_POST[""];
-	$status = $_POST[""];
+	$status = 0;
 	$incAmount = $_POST["storageReq"];
 	$dateOpened = mysqli_query($con, "SELECT NOW() as 'now'");
 	$date = mysqli_fetch_array($dateOpened);
-	echo $date['now'];
-
 	$dateClosed = NULL;
 
 	mysqli_close($con);
-?>
 ?>
 
 <html>
@@ -74,10 +71,10 @@
 			<div class="panel panel-primary">
 				<div class="panel-body">
 					<ul class="nav nav-pills nav-stacked">
-						<li class="active"><a href="#">Project Selection</a></li>
+						<li><a href="ProjectSelection.php">Project Selection</a></li>
 						<li><a href="#">Approve Requests</a></li>
 						<li><a href="#">Pending Requests</a></li>
-						<li><a href="storageRequest.php">Storage Request</a></li>
+						<li class="active"><a href="storageRequest.php">Storage Request</a></li>
 						<br><br>
 						<li><a href="#">Log out</a></li>
 					</ul>
@@ -87,39 +84,11 @@
 		<div class="col-md-9">	
 			<div class="panel panel-primary">	
 				<div id="panel-body">
-					<?php
-						
-						
-					?>
-					<form method="post" action="<?php echo $PHP_SELF;?>"> 
-						<p><strong>Storage Request Form</strong></p>
-						<p> The purpose of this form is to request changes to your requirements.</p>
-						<p>
-							<label for="textfield">Project Name:</label>
-							<input name="textfield" type="text" disabled="disabled" id="textfield" value="[project's name]">
-						</p>
-						<p>
-							<label for="projDataMan">Project Data Manager:</label>
-							<input name="projDataMan" type="text" disabled="disabled" id="projDataMan" value=" [manager's name]">
-						</p>
-						<p>
-							<label for="projStorCap">Project Storage Capacity:</label>
-							<input name="projStorCap" type="text" disabled="disabled" id="projStorCap" value="[size]" size="10"> 
-							MB
-						</p>
-						<p>
-							<label for="storageReq">Additional Storage Required:</label>
-							<input name="storageReq" type="text" required="required" id="textfield2" size="10">
-							MB
-						</p>
-						<p>
-							<label for="textarea">Comment:<br></label>
-							<textarea name="textarea" id="textarea" cols="45" rows="3"></textarea>
-						</p>
-						<p>
-							<input type="submit" name="submitButton" id="submitButton" value="Submit">
-							<input type="button" name="cancelButton" id="cancelButton" value="Cancel">
-						</p>
+					<form class="navbar-form" method="post" action="<?php echo $PHP_SELF;?>"> 
+						<div class="form-group">
+							<button type="submit" class="btn btn-default">Submit</button>
+							<button type="button" class="btn btn-default">Cancel</button>
+						</div>
 					</form>
 				</div>
 			</div>

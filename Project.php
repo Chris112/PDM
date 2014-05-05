@@ -47,48 +47,107 @@ include 'commonElements.php';
         <?php displayHeader() ?>
 
         <?php displayNavbar() ?>
-
+        
         
         <!-- Main Panel area -->
         <div class="col-md-9">	
             <div class="panel panel-primary">
                 <div class="panel-heading">
-                    <h3 class="panel-title">Project 1</h3>
+                    <h3>Project Title</h3>
                 </div>
-                <div class="panel-body">
-                    <?php
-                    $con = mysqli_connect('localhost', 'samcalab_chriswb', 'uz,vt78?zYpwu*CV6', 'samcalab_uniproject');
-                    // Check connection
-                    if (mysqli_connect_errno()) {
-                        echo "Failed to connect to MySQL: " . mysqli_connect_error();
-                    }
+                
+                <div class="col-md-3">          
+                    <div class="pie-chart">
+                      <?php
+                      $con = mysqli_connect('localhost', 'samcalab_chriswb', 'uz,vt78?zYpwu*CV6', 'samcalab_uniproject');
+                      // Check connection
+                      if (mysqli_connect_errno()) {
+                          echo "Failed to connect to MySQL: " . mysqli_connect_error();
+                      }
 
-                    $result = mysqli_query($con, "SELECT * FROM Users");
+                      $result = mysqli_query($con, "SELECT * FROM Users");
 
-                    echo "<table class=\"table\">
-                    <tr>
-                    <th>User ID</th>
-                    <th>Name</th>
-					<th>Email</th>
-					<th>Password</th>
-                    </tr>";
+                      //PIE CHART
 
-                    while ($row = mysqli_fetch_array($result)) {
-                        echo "<tr>";
-                        echo "<td>" . $row['userID'] . "</td>";
-                        echo "<td>" . $row['name'] . "</td>";
-                        echo "<td>" . $row['email'] . "</td>";
-                        echo "<td>" . $row['password'] . "</td>";
-                        echo "</tr>";
-                    }
-
-                    echo "</table>";
-
-                    mysqli_close($con);
-                    ?>
+                     mysqli_close($con);
+                     ?>
+                    </div>
                 </div>
+                
+                <div class="col-md-3">
+                    <div class="data-managers">
+                      
+                        <h3>Data Managers</h3>
+   
+                        <?php
+                        $con = mysqli_connect('localhost', 'samcalab_chriswb', 'uz,vt78?zYpwu*CV6', 'samcalab_uniproject');
+                        // Check connection
+                        if (mysqli_connect_errno()) {
+                          echo "Failed to connect to MySQL: " . mysqli_connect_error();
+                        }
+
+                         $result = mysqli_query($con, "SELECT * FROM Users");
+
+                        echo "<table class=\"table\">
+                        <tr>
+                        <th>User ID</th>
+                        <th>Name</th>
+                        </tr>";
+
+                        while ($row = mysqli_fetch_array($result)) {
+                            echo "<tr>";
+                            echo "<td>" . $row['userID'] . "</td>";
+                            echo "<td>" . $row['name'] . "</td>";
+                            echo "</tr>";
+                        }
+
+                        echo "</table>";
+
+                        mysqli_close($con);
+                        ?>
+                    </div>
+                </div>
+                
+                <div class="col-md-6">
+                    <div class="collaborators">
+                    <h3>Collaborators</h3>
+
+                      <?php
+                      $con = mysqli_connect('localhost', 'samcalab_chriswb', 'uz,vt78?zYpwu*CV6', 'samcalab_uniproject');
+                      // Check connection
+                      if (mysqli_connect_errno()) {
+                          echo "Failed to connect to MySQL: " . mysqli_connect_error();
+                      }
+
+                      $result = mysqli_query($con, "SELECT * FROM Users");
+
+                      echo "<table class=\"table\">
+                      <tr>
+                      <th>Name</th>
+                      <th><center>Read</center></th>
+                      <th><center>Write</center></th>
+                      </tr>";
+
+                     while ($row = mysqli_fetch_array($result)) {
+                         echo "<tr>";
+                         echo "<td>" . $row['name'] . "</td>";
+                         echo "<td> <center><input type=\"checkbox\" class=\"checkbox\"/></center> </td>";
+                         echo "<td> <center><input type=\"checkbox\" class=\"checkbox\"/></center> </td>";
+                         echo "</tr>";
+                     }
+
+                     echo "</table>";
+                     echo "<br><br>";
+                     echo "<button type=\"submit\" class=\"btn btn-default\">Submit</button>";
+                     echo "<button type=\"submit\" class=\"btn btn-default\">Submit</button>";
+                     
+                     mysqli_close($con);
+                     ?>
+                    </div>
+                </div>
+                
             </div>
-            <br><br>
+   
         </div>
 
 
