@@ -48,22 +48,48 @@ include 'commonElements.php';
 
         <?php displayNavbar() ?>
 
-
-
-        <!-- Content -->
-        <?php
-        echo "Display information about the " . $_GET['action'] . " project here.";
-        ?>
-            <!-- Create a new panel for every project that logged in user should be able to see -->
-        <div class="container">
-            <div class="row">
-               <p> TEST </p>
-
-            </div>
-        </div>
         
+        <!-- Main Panel area -->
+        <div class="col-md-9">	
+            <div class="panel panel-primary">
+                <div class="panel-heading">
+                    <h3 class="panel-title">Project 1</h3>
+                </div>
+                <div class="panel-body">
+                    <?php
+                    $con = mysqli_connect('localhost', 'samcalab_chriswb', 'uz,vt78?zYpwu*CV6', 'samcalab_uniproject');
+                    // Check connection
+                    if (mysqli_connect_errno()) {
+                        echo "Failed to connect to MySQL: " . mysqli_connect_error();
+                    }
 
-        <!-- End Content -->
+                    $result = mysqli_query($con, "SELECT * FROM Users");
+
+                    echo "<table class=\"table\">
+                    <tr>
+                    <th>User ID</th>
+                    <th>Name</th>
+					<th>Email</th>
+					<th>Password</th>
+                    </tr>";
+
+                    while ($row = mysqli_fetch_array($result)) {
+                        echo "<tr>";
+                        echo "<td>" . $row['userID'] . "</td>";
+                        echo "<td>" . $row['name'] . "</td>";
+                        echo "<td>" . $row['email'] . "</td>";
+                        echo "<td>" . $row['password'] . "</td>";
+                        echo "</tr>";
+                    }
+
+                    echo "</table>";
+
+                    mysqli_close($con);
+                    ?>
+                </div>
+            </div>
+            <br><br>
+        </div>
 
 
 
