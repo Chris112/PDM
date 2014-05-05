@@ -131,6 +131,7 @@ include 'commonElements.php';
                      while ($row = mysqli_fetch_array($result)) {
                          echo "<tr>";
 <<<<<<< HEAD
+<<<<<<< HEAD
                          echo "<td>" . lookupUserName($row['userID']) . "</td>";
                          if ($row['permissions'] = 3) {
                             echo "<td> <center><input type=\"checkbox\" class=\"read\" checked=\"checked\"/></center> </td>";
@@ -151,6 +152,8 @@ include 'commonElements.php';
                          echo "</tr>"; 
                          
 =======
+=======
+>>>>>>> parent of 4d3a9be... backup before installing extended bootstrap
                          echo "<td>" . $row['name'] . "</td>";
                          echo "<td> <center><input type=\"checkbox\" class=\"checkbox\"/></center> </td>";
                          echo "<td> <center><input type=\"checkbox\" class=\"checkbox\"/></center> </td>";
