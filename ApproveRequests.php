@@ -1,3 +1,20 @@
+<?php
+session_start();
+
+if (empty($_SESSION[$access])) {
+    header("location:login.php");
+    die();
+} 
+include 'dbFunctions.php';
+include 'commonElements.php';
+?>
+
+
+
+
+
+
+
 <!DOCTYPE html>
 <html lang="en">
     <head>
@@ -12,15 +29,37 @@
         <link rel="shortcut icon" href="assets/icons/icon.ico">
 
         <!-- Bootstrap core CSS -->
-        <link href="css/bootstrap.min.css" rel="stylesheet">
-        <link href="css/sticky-footer-navbar.css" rel="stylesheet">    
+        <?php importCoreCSS() ?>
+        
     </head>
     <body>
-        <div class="page-header">
-            <div align="center">
-                <h1>The Dons Squad <small> Approve Requests</h1>
+        <?php displayHeader();?>
+        
+         <!-- Nav bar -->
+        <div class="col-md-2">
+            <div class="panel panel-primary">
+                <div class="panel-body">
+                    <ul class="nav nav-pills nav-stacked">
+                        <?php
+                        // Only display Faculty Selection link if currUser is admin or approver
+                        if ($_SESSION['currUser']['site_level'] > 1) {
+                            echo "<li><a href=\"FacultySelection.php\">Faculty Selection</a></li>";
+                        }
+                        ?>
+                        <li><a href="ProjectSelection.php">Project Selection</a></li>
+                        <li class="active"><a href="ApproveRequests.php">Approve Requests</a></li>
+                        <li><a href="PendingRequests.php">Pending Requests</a></li>
+                        <li><a href="StorageRequests.php">Storage Request</a></li>
+                        <br><br>
+                        <li><a href="logout.php">Log out</a></li>
+                    </ul>
+                </div>
             </div>
         </div>
+        <!-- Nav bar end -->
+        
+        
+        
 	
 	<?php
         

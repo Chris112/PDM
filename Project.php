@@ -2,7 +2,6 @@
 session_start();
 if (empty($_SESSION[$access])) {
     header("location:login.php");
-    //dieHard3();
 }
 include 'dbFunctions.php';
 include 'commonElements.php';
@@ -23,30 +22,42 @@ include 'commonElements.php';
 
 
         <meta charset="utf-8"> 
-
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
-
         <meta name="viewport" content="width=device-width, initial-scale=1"> 
-
         <meta name="description" content="">
-
         <meta name="author" content="">
-
         <link rel="shortcut icon" href="assets/ico/icon.ico">
 
 
-
         <!-- Bootstrap core CSS -->
-
         <?php importCoreCSS() ?>
-
     </head>
-
     <body>
-
         <?php displayHeader() ?>
-
-        <?php displayNavbar() ?>
+        
+        
+         <!-- Nav bar -->
+        <div class="col-md-2">
+            <div class="panel panel-primary">
+                <div class="panel-body">
+                    <ul class="nav nav-pills nav-stacked">
+                        <?php
+                        // Only display Faculty Selection link if currUser is admin or approver
+                        if ($_SESSION['currUser']['site_level'] > 1) {
+                            echo "<li><a href=\"FacultySelection.php\">Faculty Selection</a></li>";
+                        }
+                        ?>
+                        <li class="active"><a href="#">Project Selection</a></li>
+                        <li><a href="ApproveRequests.php">Approve Requests</a></li>
+                        <li><a href="PendingRequests.php">Pending Requests</a></li>
+                        <li><a href="StorageRequests.php">Storage Request</a></li>
+                        <br><br>
+                        <li><a href="logout.php">Log out</a></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        <!-- Nav bar end -->
         
         
         <!-- Main Panel area -->
