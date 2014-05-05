@@ -72,6 +72,47 @@ include 'commonElements.php';
                 </div>
                 <div class="panel-body">
                     <table class="table">
+
+
+                        <?php
+                        $con = mysqli_connect('localhost', 'samcalab_chriswb', 'uz,vt78?zYpwu*CV6', 'samcalab_uniproject');
+                        // Check connection
+                        if (mysqli_connect_errno()) {
+                            echo "Failed to connect to MySQL: " . mysqli_connect_error();
+                        }
+
+                        $result = mysqli_query($con, "SELECT * FROM Requests");
+
+                        echo "<table class=\"table\">
+                    <tr>
+                    <th>Project Name</th>
+                    <th>Requested Amount (GB)</th>
+                    <th>Reason</th>
+                    <th>Request Date</th>
+                    <th>Status</th>
+                    </tr>";
+
+                        while ($row = mysqli_fetch_array($result)) {
+                            echo "<tr>";
+                            echo "<td>" . lookupProjName($row['projID']) . "</td>";
+                            echo "<td>" . $row['increase_amount'] . "</td>";
+                            echo "<td>" . $row['reason'] . "</td>";
+                            echo "<td>" . $row['date_opened'] . "</td>";
+                            if ($row['status'] == 0){
+                                echo "<td>Pending</td>";
+                            } else if ($row['status'] == 1) {
+                                echo "<td>Approved</td>";
+                            } else {
+                                echo "<td>Declined</td>";
+                            }
+                            echo "</tr>";
+                        }
+                        echo "</table>";
+                        mysqli_close($con);
+                        ?>
+
+
+<!--
                         <tr>
                             <th>Project Name</th>
                             <th>Requested Amount (GB)</th>
@@ -113,7 +154,7 @@ include 'commonElements.php';
                             <td></td>
                             <td>22/05/2014</td>
                             <td>Pending</td>
-                        </tr>
+                        </tr>-->
                     </table>
                 </div>
             </div>
