@@ -86,6 +86,9 @@
 				<div id="panel-body">
 					<form class="navbar-form" method="post" action="<?php echo $PHP_SELF;?>"> 
 						<div class="form-group">
+							<div class="input-group">
+								<input type="text" class="form-control">
+							</div>
 							<button type="submit" class="btn btn-default">Submit</button>
 							<button type="button" class="btn btn-default">Cancel</button>
 						</div>
