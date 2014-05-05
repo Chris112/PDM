@@ -144,9 +144,24 @@ include 'commonElements.php';
                      while ($row = mysqli_fetch_array($collaborators)) {
                          echo "<tr>";
                          echo "<td>" . lookupUserName($row['userID']) . "</td>";
-                         echo "<td> <center><input type=\"checkbox\" class=\"checkbox\"/></center> </td>";
-                         echo "<td> <center><input type=\"checkbox\" class=\"checkbox\"/></center> </td>";
-                         echo "</tr>";
+                         if ($row['permissions'] = 3) {
+                            echo "<td> <center><input type=\"checkbox\" class=\"read\" checked=\"checked\"/></center> </td>";
+                            echo "<td> <center><input type=\"checkbox\" class=\"write\" checked=\"checked\"/></center> </td>";                               
+                         }
+                         else if ($row['permissions'] = 2) {
+                            echo "<td> <center><input type=\"checkbox\" class=\"read\"/></center> </td>";
+                            echo "<td> <center><input type=\"checkbox\" class=\"write\" checked=\"checked\"/></center> </td>";
+                         }
+                          else if ($row['permissions'] = 1) {
+                            echo "<td> <center><input type=\"checkbox\" class=\"read\" checked=\"checked\"/></center> </td>";
+                            echo "<td> <center><input type=\"checkbox\" class=\"write\"/></center> </td>";
+                         }
+                         else {
+                            echo "<td> <center><input type=\"checkbox\" class=\"read\"/></center> </td>";
+                            echo "<td> <center><input type=\"checkbox\" class=\"write\"/></center> </td>";
+                         }
+                         echo "</tr>"; 
+                         
                      }
 
                      echo "</table>";
