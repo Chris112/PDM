@@ -70,14 +70,13 @@ include 'commonElements.php';
                           echo "Failed to connect to MySQL: " . mysqli_connect_error();
                       }
 
-                      $result = mysqli_query($con, "SELECT * FROM Users");
+                      $usage = mysqli_query($con, "SELECT * FROM Users");
 
                       //PIE CHART
                      echo "<div class=\"well well-sm\" ><font size=\"4\"> <center>Available: XX GB<br> Used: XX GB<br> Free: XX GB</center></font></div>";
                      echo "<center><button type=\"button\" class=\"btn btn-default\">View Storage</button></center>";
                      echo "<center><button type=\"button\" class=\"btn btn-default\">Request Additional Storage</button></center>";
 
-                     mysqli_close($con);
                      ?>
                     </div>
                 </div>
@@ -88,12 +87,7 @@ include 'commonElements.php';
                         <h3>Data Managers</h3>
    
                         <?php
-                        $con = mysqli_connect('localhost', 'samcalab_chriswb', 'uz,vt78?zYpwu*CV6', 'samcalab_uniproject');
-                        // Check connection
-                        if (mysqli_connect_errno()) {
-                          echo "Failed to connect to MySQL: " . mysqli_connect_error();
-                        }
-                         
+                       
                         
                          $dataManagers = mysqli_query($con, "SELECT * FROM User_Projects WHERE projID = " . lookupProjID($_GET['action']) . " AND permissions > 3" );
 
@@ -115,7 +109,7 @@ include 'commonElements.php';
                         echo "<center><button type=\"button\" class=\"btn btn-default\">Add Data Manager</button></center></center>";
                         echo "<center><button type=\"button\" class=\"btn btn-default\">Remove Data Manager</button></center>";
                         
-                        mysqli_close($con);
+                        
                         ?>
                     </div>
                 </div>
@@ -126,11 +120,7 @@ include 'commonElements.php';
                     <h3>Collaborators</h3>
 
                       <?php
-                      $con = mysqli_connect('localhost', 'samcalab_chriswb', 'uz,vt78?zYpwu*CV6', 'samcalab_uniproject');
-                      // Check connection
-                      if (mysqli_connect_errno()) {
-                          echo "Failed to connect to MySQL: " . mysqli_connect_error();
-                      }
+                   
 
                       $collaborators = mysqli_query($con, "SELECT * FROM User_Projects WHERE projID = " . lookupProjID($_GET['action']) . " AND permissions <= 3" );
 
@@ -171,7 +161,7 @@ include 'commonElements.php';
                      echo "<center><button type=\"button\" class=\"btn btn-default\">Promote to Data Manager</button></center>";
                      echo "<center><button type=\"button\" name=\"SaveChanges\" class=\"btn btn-default\">Save Changes</button></center>";
 
-                     /*
+                     
                      echo "filter_input(INPUT_POST, read".$row['userID'].")";
                      
                      if (isset($_POST['SaveChanges'])) {
@@ -198,7 +188,7 @@ include 'commonElements.php';
                             }
                             
                         }
-                     }*/
+                     }
             
                      
                      mysqli_close($con);
