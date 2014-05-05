@@ -133,6 +133,7 @@ include 'commonElements.php';
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
                          echo "<td>" . lookupUserName($row['userID']) . "</td>";
                          if ($row['permissions'] = 3) {
                             echo "<td> <center><input type=\"checkbox\" class=\"read\" checked=\"checked\"/></center> </td>";
@@ -153,6 +154,8 @@ include 'commonElements.php';
                          echo "</tr>"; 
                          
 =======
+=======
+>>>>>>> parent of 4d3a9be... backup before installing extended bootstrap
 =======
 >>>>>>> parent of 4d3a9be... backup before installing extended bootstrap
 =======
