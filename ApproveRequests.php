@@ -1,10 +1,10 @@
-<?php
+﻿<?php
 session_start();
 
-if (empty($_SESSION[$access])) {
-    header("location:login.php");
-    die();
-} 
+// if (empty($_SESSION[$access])) {
+//    header("location:login.php");
+//    die();
+//} 
 include 'dbFunctions.php';
 include 'commonElements.php';
 ?>
@@ -62,55 +62,121 @@ include 'commonElements.php';
         
 	
 	<?php
-        
-        $con = mysqli_connect('localhost', 'samcalab_chriswb', 'uz,vt78?zYpwu*CV6', 'samcalab_uniproject');
-        // Check connection
-        if (mysqli_connect_errno()) {
-           echo "Failed to connect to MySQL: " . mysqli_connect_error();
-        }
 
-	$projects = mysqli_query($con, "SELECT * FROM Projects");
+	//Admin Code
+	if ($_SESSION['currUser']['site_level'] = 3)
+	{
+        	$con = mysqli_connect('localhost', 'samcalab_chriswb', 'uz,vt78?zYpwu*CV6', 'samcalab_uniproject');
+        	// Check connection
+        	if (mysqli_connect_errno()) {
+         	  echo "Failed to connect to MySQL: " . mysqli_connect_error();
+        	}
 
-	while ($pro = mysqli_fetch_array($projects)) {
+		$projects = mysqli_query($con, "SELECT * FROM Projects");
 
+		while ($pro = mysqli_fetch_array($projects)) {
+			
 
-	          echo "<div class=\"col-md-9\">	
-                        <div class=\"panel panel-primary\">
-                	<div class=\"panel-heading\">
-                   	<h3 class=\"panel-title\"> $pro[0] </h3>
-                	</div>
-                	<div class=\"panel-body\">  
-                        <table class=\"table\">
-        	        <tr>
-                	<th>User ID</th>
-                    	<th>Name</th>
-			<th>Email</th>
-			<th>Password</th>
-                    	</tr>";
+			$p = mysqli_query($con,"SELECT * FROM Users u WHERE u.userID = " . $pro['prim_invest']);
+			$pi = mysqli_fetch_array($p);
+
+		        echo "<div class=\"col-md-9\">	
+        	              <div class=\"panel panel-primary\">
+                	        <div class=\"panel-heading\">
+                   		<h3 class=\"panel-title\"> Requests from primary investigator for $pro[2] ($pi[2]) </h3>
+                		</div>
+                		<div class=\"panel-body\">  
+                        	<table class=\"table\">
+        	        	<tr>
+				<th>Increase Amount</th>
+				<th>Status</th>
+				<th>Date Opened</th>
+				<th>Date Closed</th>
+        	            	</tr>";
                   
-                            $result = mysqli_query($con, "SELECT * FROM Requests r WHERE r.projID = 1");
+	                $result = mysqli_query($con, "SELECT * FROM Requests r WHERE r.projID = " . $pro['projID'] . " AND r.userID = " . $pi['userID']);
 
-	                    while ($row = mysqli_fetch_array($result)) {
-        	                echo "<tr>";
-                	        echo "<td>" . $row['userID'] . "</td>";
-	                        echo "<td>" . $row['request_type'] . "</td>";
-        	                echo "<td>" . $row['status'] . "</td>";
-                	        echo "<td>" . $row['increase_amount'] . "</td>";
+	                while ($row = mysqli_fetch_array($result)) {
+
+				$user = mysqli_query($con, "SELECT u.name FROM Users u WHERE u.userID = " . $row['userID']);
+				$name = mysqli_fetch_array($user);
+	
+        		       	echo "<tr>";
+				echo "<td>" . $row['increase_amount'] . "</td>";
+                	        echo "<td>" . $row['status'] . "</td>";
 				echo "<td>" . $row['date_opened'] . "</td>";
 				echo "<td>" . $row['date_closed'] . "</td>";
 	                        echo "</tr>";
-        	            }
+                	}
 
-	                echo "</table>
-                              </div>
-                              </div>
+		        echo "</table>
+        	              </div>
+                	      </div>
                               <br><br>
                               </div>";
 
-	}
+		}
         
-        mysqli_close($con);
-        ?>
+        	mysqli_close($con);		
+	}
+	//Approver Code
+	if ($_SESSION['currUser']['site_level'] = 2)
+	{      
+        	$con = mysqli_connect('localhost', 'samcalab_chriswb', 'uz,vt78?zYpwu*CV6', 'samcalab_uniproject');
+        	// Check connection
+        	if (mysqli_connect_errno()) {
+         	  echo "Failed to connect to MySQL: " . mysqli_connect_error();
+        	}
+
+		$projects = mysqli_query($con, "SELECT * FROM Projects");
+
+		while ($pro = mysqli_fetch_array($projects)) {
+			
+
+			$p = mysqli_query($con,"SELECT * FROM Users u WHERE u.userID = " . $pro['prim_invest']);
+			$pi = mysqli_fetch_array($p);
+
+		        echo "<div class=\"col-md-9\">	
+        	              <div class=\"panel panel-primary\">
+                	        <div class=\"panel-heading\">
+                   		<h3 class=\"panel-title\"> Requests from primary investigator for $pro[2] ($pi[2]) </h3>
+                		</div>
+                		<div class=\"panel-body\">  
+                        	<table class=\"table\">
+        	        	<tr>
+				<th>Increase Amount</th>
+				<th>Status</th>
+				<th>Date Opened</th>
+				<th>Date Closed</th>
+        	            	</tr>";
+                  
+	                $result = mysqli_query($con, "SELECT * FROM Requests r WHERE r.projID = " . $pro['projID'] . " AND r.userID = " . $pi['userID']);
+
+	                while ($row = mysqli_fetch_array($result)) {
+
+				$user = mysqli_query($con, "SELECT u.name FROM Users u WHERE u.userID = " . $row['userID']);
+				$name = mysqli_fetch_array($user);
+	
+        		       	echo "<tr>";
+				echo "<td>" . $row['increase_amount'] . "</td>";
+                	        echo "<td>" . $row['status'] . "</td>";
+				echo "<td>" . $row['date_opened'] . "</td>";
+				echo "<td>" . $row['date_closed'] . "</td>";
+	                        echo "</tr>";
+                	}
+
+		        echo "</table>
+        	              </div>
+                	      </div>
+                              <br><br>
+                              </div>";
+
+		}
+        
+        	mysqli_close($con);
+        }
+	
+	?>
         
         <!-- Footer -->
         <div id="footer">
