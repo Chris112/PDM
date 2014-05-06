@@ -10,22 +10,43 @@
 		echo "Failed to connect to MySQL: " . mysqli_connect_error();
 	}
 
-	function sendRequest($userID, $projID, $facID, $reqType, $status, $incAmount, $dateOpened, $dateClosed)
+	$userID = $_SESSION['currUser']['userID'];
+	$projID = 1;
+	$facID = 1;
+	$reqType = 1;
+	$status = 0;
+	$incAmount = 1;
+	$dateOpened = mysqli_query($con, "SELECT NOW() as 'now'");
+	$date = mysqli_fetch_array($dateOpened);
+	$dateClosed = NULL;
+	$reason = 'reason here';
+
+	mysqli_query($con, "INSERT INTO Requests(userID, projID, facID, request_type, 
+						status , increase_amount, date_opened, date_closed, reason ) 
+						VALUES ($userID, $projID, $facID, $reqType, $status, $incAmount, $date, 2014-05-07, 'reason here')");
+
+	/*
+
+	function sendRequest($userID, $projID, $facID, $reqType, $status, $incAmount, $date, $dateClosed)
 	{
-		mysqli_query($con, "INSERT INTO Requests ($userID, $projID, $facID, $reqType, $status, $incAmount, now(), $dateClosed)");
+		mysqli_query($con, "INSERT INTO Requests ($userID, $projID, $facID, $reqType, $status, $incAmount, $date, $dateClosed)");
 	}
 	
 	$userID = $_SESSION['currUser']['userID'];
-	$projID = $_POST[""];
-	$facID = $_POST[""];
-	$reqType = $_POST[""];
+	$projID = 1;
+	$facID = 1;
+	$reqType = 1;
 	$status = 0;
-	$incAmount = $_POST["storageReq"];
+	$incAmount = 1;
 	$dateOpened = mysqli_query($con, "SELECT NOW() as 'now'");
 	$date = mysqli_fetch_array($dateOpened);
 	$dateClosed = NULL;
 
-	echo test;mysqli_close($con);
+	sendRequest($userID, $projID, $facID, $reqType, $status, $incAmount, $dateOpened, $dateClosed);*/
+
+	
+
+	mysqli_close($con);
 ?>
 <html>
 	<head>
@@ -40,7 +61,7 @@
 		<link rel="shortcut icon" href="assets/icons/icon.ico">
 		
 		<!-- Bootstrap core CSS -->
-		link href="css/bootstrap.min.css" rel="stylesheet">
+		<link href="css/bootstrap.min.css" rel="stylesheet">
 		<link href="css/sticky-footer-navbar.css" rel="stylesheet">
 		<?php importCoreCSS() ?>
 		<style type="text/css">

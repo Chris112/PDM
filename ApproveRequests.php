@@ -62,9 +62,9 @@ include 'commonElements.php';
         
 	
 	<?php
-
+	//If you're an admin, table should show requests made by all approvers
 	//Admin Code
-	if ($_SESSION['currUser']['site_level'] = 3)
+	if ($_SESSION['currUser']['site_level'] == 3)
 	{
         	$con = mysqli_connect('localhost', 'samcalab_chriswb', 'uz,vt78?zYpwu*CV6', 'samcalab_uniproject');
         	// Check connection
@@ -72,18 +72,25 @@ include 'commonElements.php';
          	  echo "Failed to connect to MySQL: " . mysqli_connect_error();
         	}
 
-		$projects = mysqli_query($con, "SELECT * FROM Projects");
+		$faculty = mysqli_query($con, "SELECT * FROM Faculties");
 
-		while ($pro = mysqli_fetch_array($projects)) {
+		while ($fac = mysqli_fetch_array($faculty)) {
 			
-
-			$p = mysqli_query($con,"SELECT * FROM Users u WHERE u.userID = " . $pro['prim_invest']);
-			$pi = mysqli_fetch_array($p);
+			if ($fac['approver'] == NULL)
+			{
+				$approver = "No Approver";
+			}
+			else
+			{
+				$a = mysqli_query($con,"SELECT * FROM Users u WHERE u.userID = " . $fac['approver']);
+				$app = mysqli_fetch_array($a);
+				$approver = $app['name'];
+			}
 
 		        echo "<div class=\"col-md-9\">	
         	              <div class=\"panel panel-primary\">
                 	        <div class=\"panel-heading\">
-                   		<h3 class=\"panel-title\"> Requests from primary investigator for $pro[2] ($pi[2]) </h3>
+                   		<h3 class=\"panel-title\"> Requests from approver for faculty: " . $fac['name'] . "(" . $approver . ")" . " </h3>
                 		</div>
                 		<div class=\"panel-body\">  
                         	<table class=\"table\">
@@ -94,13 +101,9 @@ include 'commonElements.php';
 				<th>Date Closed</th>
         	            	</tr>";
                   
-	                $result = mysqli_query($con, "SELECT * FROM Requests r WHERE r.projID = " . $pro['projID'] . " AND r.userID = " . $pi['userID']);
+	                $result = mysqli_query($con, "SELECT * FROM Requests r WHERE r.facID = " . $fac['facID'] . " AND r.userID = " . $app['userID'] . " AND r.projID IS NULL");
 
 	                while ($row = mysqli_fetch_array($result)) {
-
-				$user = mysqli_query($con, "SELECT u.name FROM Users u WHERE u.userID = " . $row['userID']);
-				$name = mysqli_fetch_array($user);
-	
         		       	echo "<tr>";
 				echo "<td>" . $row['increase_amount'] . "</td>";
                 	        echo "<td>" . $row['status'] . "</td>";
@@ -119,8 +122,9 @@ include 'commonElements.php';
         
         	mysqli_close($con);		
 	}
+	//if you're an Approver, table show show requests made by each PI of the faculty
 	//Approver Code
-	if ($_SESSION['currUser']['site_level'] = 2)
+	if ($_SESSION['currUser']['site_level'] == 2)
 	{      
         	$con = mysqli_connect('localhost', 'samcalab_chriswb', 'uz,vt78?zYpwu*CV6', 'samcalab_uniproject');
         	// Check connection
@@ -128,7 +132,7 @@ include 'commonElements.php';
          	  echo "Failed to connect to MySQL: " . mysqli_connect_error();
         	}
 
-		$projects = mysqli_query($con, "SELECT * FROM Projects");
+		$projects = mysqli_query($con, "SELECT * FROM Projects p WHERE p.facID = " . $_SESSION['currUser']['facID']);
 
 		while ($pro = mysqli_fetch_array($projects)) {
 			
@@ -139,7 +143,7 @@ include 'commonElements.php';
 		        echo "<div class=\"col-md-9\">	
         	              <div class=\"panel panel-primary\">
                 	        <div class=\"panel-heading\">
-                   		<h3 class=\"panel-title\"> Requests from primary investigator for $pro[2] ($pi[2]) </h3>
+                   		<h3 class=\"panel-title\"> Requests from primary investigator for " . $pro['name'] . "(" . $pi['name'] . ")" . " </h3>
                 		</div>
                 		<div class=\"panel-body\">  
                         	<table class=\"table\">
@@ -153,10 +157,6 @@ include 'commonElements.php';
 	                $result = mysqli_query($con, "SELECT * FROM Requests r WHERE r.projID = " . $pro['projID'] . " AND r.userID = " . $pi['userID']);
 
 	                while ($row = mysqli_fetch_array($result)) {
-
-				$user = mysqli_query($con, "SELECT u.name FROM Users u WHERE u.userID = " . $row['userID']);
-				$name = mysqli_fetch_array($user);
-	
         		       	echo "<tr>";
 				echo "<td>" . $row['increase_amount'] . "</td>";
                 	        echo "<td>" . $row['status'] . "</td>";
@@ -175,7 +175,62 @@ include 'commonElements.php';
         
         	mysqli_close($con);
         }
-	
+
+	//if you're a PI, table should show requests made by the DM(s) of the project you're PI
+	//PI code
+	if ($_SESSION['currUser']['site_level'] == 1)
+	{      
+        	$con = mysqli_connect('localhost', 'samcalab_chriswb', 'uz,vt78?zYpwu*CV6', 'samcalab_uniproject');
+        	// Check connection
+        	if (mysqli_connect_errno()) {
+         	  echo "Failed to connect to MySQL: " . mysqli_connect_error();
+        	}
+
+		$projects = mysqli_query($con, "SELECT * FROM Projects");
+
+		while ($pro = mysqli_fetch_array($projects)) {
+			
+
+			$p = mysqli_query($con,"SELECT * FROM Users u WHERE u.userID = " . $pro['prim_invest']);
+			$pi = mysqli_fetch_array($p);
+
+		        echo "<div class=\"col-md-9\">	
+        	              <div class=\"panel panel-primary\">
+                	        <div class=\"panel-heading\">
+                   		<h3 class=\"panel-title\"> Requests from primary investigator for " . $pro['name'] . "(" . $pi['name'] . ")" . " </h3>
+                		</div>
+                		<div class=\"panel-body\">  
+                        	<table class=\"table\">
+        	        	<tr>
+				<th>Increase Amount</th>
+				<th>Status</th>
+				<th>Date Opened</th>
+				<th>Date Closed</th>
+        	            	</tr>";
+                  
+	                $result = mysqli_query($con, "SELECT * FROM Requests r WHERE r.projID = " . $pro['projID'] . " AND r.userID = " . $pi['userID']);
+
+	                while ($row = mysqli_fetch_array($result)) {
+        		       	echo "<tr>";
+				echo "<td>" . $row['increase_amount'] . "</td>";
+                	        echo "<td>" . $row['status'] . "</td>";
+				echo "<td>" . $row['date_opened'] . "</td>";
+				echo "<td>" . $row['date_closed'] . "</td>";
+	                        echo "</tr>";
+                	}
+
+		        echo "</table>
+        	              </div>
+                	      </div>
+                              <br><br>
+                              </div>";
+
+		}
+        
+        	mysqli_close($con);
+        }
+
+
 	?>
         
         <!-- Footer -->

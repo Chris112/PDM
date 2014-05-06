@@ -97,7 +97,7 @@ include 'commonElements.php';
                                 . "Total:" . $total['total_space'] . " GB<br> "
                                 . "Used:" . $used['used_space'] . " GB<br> "
                                 . "Free: " . $free['free_space'] . " GB</center></font></div>";
-                                echo "<center><button type=\"button\" class=\"btn btn-default btn-block\">View Storage</button></center>";
+                                echo "<center><a href=\"/PDM/ProjectStorage.php?action=" . $_GET['action'] . "\"><button type=\"button\" class=\"btn btn-default btn-block\" href=\"#\">View Storage</button></center></a>";
                                 echo "<center><button type=\"button\" class=\"btn btn-default btn-block\">Request Additional Storage</button></center>";
                                 ?>
                             </div>
