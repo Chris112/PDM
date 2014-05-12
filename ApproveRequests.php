@@ -1,17 +1,13 @@
-﻿<?php
+<?php
 session_start();
 
-// if (empty($_SESSION[$access])) {
-//    header("location:login.php");
-//    die();
-//} 
+if (empty($_SESSION[$access])) {
+    header("location:login.php");
+    die();
+}
 include 'dbFunctions.php';
 include 'commonElements.php';
 ?>
-
-
-
-
 
 
 
@@ -49,7 +45,7 @@ include 'commonElements.php';
                         <li><a href="ProjectSelection.php">Project Selection</a></li>
                         <li class="active"><a href="ApproveRequests.php">Approve Requests</a></li>
                         <li><a href="PendingRequests.php">Pending Requests</a></li>
-                        <li><a href="StorageRequests.php">Storage Request</a></li>
+                        <li><a href="StorageRequest.php">Storage Request</a></li>
                         <br><br>
                         <li><a href="logout.php">Log out</a></li>
                     </ul>
@@ -102,14 +98,16 @@ include 'commonElements.php';
         	            	</tr>";
                   
 	                $result = mysqli_query($con, "SELECT * FROM Requests r WHERE r.facID = " . $fac['facID'] . " AND r.userID = " . $app['userID'] . " AND r.projID IS NULL");
-
-	                while ($row = mysqli_fetch_array($result)) {
-        		       	echo "<tr>";
-				echo "<td>" . $row['increase_amount'] . "</td>";
-                	        echo "<td>" . $row['status'] . "</td>";
-				echo "<td>" . $row['date_opened'] . "</td>";
-				echo "<td>" . $row['date_closed'] . "</td>";
-	                        echo "</tr>";
+			if ($result)
+			{
+	                	while ($row = mysqli_fetch_array($result)) {
+        		       		echo "<tr>";
+					echo "<td>" . $row['increase_amount'] . "</td>";
+                	        	echo "<td>" . $row['status'] . "</td>";
+					echo "<td>" . $row['date_opened'] . "</td>";
+					echo "<td>" . $row['date_closed'] . "</td>";
+	                        	echo "</tr>";
+				}
                 	}
 
 		        echo "</table>
@@ -156,13 +154,16 @@ include 'commonElements.php';
                   
 	                $result = mysqli_query($con, "SELECT * FROM Requests r WHERE r.projID = " . $pro['projID'] . " AND r.userID = " . $pi['userID']);
 
-	                while ($row = mysqli_fetch_array($result)) {
-        		       	echo "<tr>";
-				echo "<td>" . $row['increase_amount'] . "</td>";
-                	        echo "<td>" . $row['status'] . "</td>";
-				echo "<td>" . $row['date_opened'] . "</td>";
-				echo "<td>" . $row['date_closed'] . "</td>";
-	                        echo "</tr>";
+			if ($result)
+			{
+	                	while ($row = mysqli_fetch_array($result)) {
+        		       		echo "<tr>";
+					echo "<td>" . $row['increase_amount'] . "</td>";
+                	        	echo "<td>" . $row['status'] . "</td>";
+					echo "<td>" . $row['date_opened'] . "</td>";
+					echo "<td>" . $row['date_closed'] . "</td>";
+	                        	echo "</tr>";
+				}
                 	}
 
 		        echo "</table>
@@ -176,7 +177,8 @@ include 'commonElements.php';
         	mysqli_close($con);
         }
 
-	//if you're a PI, table should show requests made by the DM(s) of the project you're PI
+	//if you're a Pi, table should show requests made by the DM(s) of the project you're PI
+	//To be a PI site level must be 1 and user project permissions must be 5
 	//PI code
 	if ($_SESSION['currUser']['site_level'] == 1)
 	{      
@@ -186,37 +188,42 @@ include 'commonElements.php';
          	  echo "Failed to connect to MySQL: " . mysqli_connect_error();
         	}
 
-		$projects = mysqli_query($con, "SELECT * FROM Projects");
+		$userid = $_SESSION['currUser']['userID'];
+		
+		$piprojects = mysqli_query($con, "SELECT * FROM Projects p WHERE p.prim_invest = " . $userid);
 
-		while ($pro = mysqli_fetch_array($projects)) {
-			
+		while ($pro = mysqli_fetch_array($piprojects)) {
 
-			$p = mysqli_query($con,"SELECT * FROM Users u WHERE u.userID = " . $pro['prim_invest']);
-			$pi = mysqli_fetch_array($p);
+			$dmrequest = mysqli_query($con, "SELECT * FROM Requests r WHERE r.projID = " .$pro['projID'] . " AND r.userID IN 
+							(SELECT userID FROM User_Projects u WHERE u.projID = r.projID AND u.permissions =4)");
 
 		        echo "<div class=\"col-md-9\">	
         	              <div class=\"panel panel-primary\">
                 	        <div class=\"panel-heading\">
-                   		<h3 class=\"panel-title\"> Requests from primary investigator for " . $pro['name'] . "(" . $pi['name'] . ")" . " </h3>
+                   		<h3 class=\"panel-title\"> Requests from data managers for " . $pro['name'] . " </h3>
                 		</div>
                 		<div class=\"panel-body\">  
                         	<table class=\"table\">
         	        	<tr>
+				<th>Request ID</th>
 				<th>Increase Amount</th>
 				<th>Status</th>
 				<th>Date Opened</th>
 				<th>Date Closed</th>
         	            	</tr>";
-                  
-	                $result = mysqli_query($con, "SELECT * FROM Requests r WHERE r.projID = " . $pro['projID'] . " AND r.userID = " . $pi['userID']);
-
-	                while ($row = mysqli_fetch_array($result)) {
-        		       	echo "<tr>";
-				echo "<td>" . $row['increase_amount'] . "</td>";
-                	        echo "<td>" . $row['status'] . "</td>";
-				echo "<td>" . $row['date_opened'] . "</td>";
-				echo "<td>" . $row['date_closed'] . "</td>";
-	                        echo "</tr>";
+              
+						
+			if ($dmrequest)
+			{
+	                	while ($row = mysqli_fetch_array($dmrequest)) {
+        		       		echo "<tr>";
+					echo "<td>" . $row['reqID'] . "</td>"; 
+					echo "<td>" . $row['increase_amount'] . "</td>";
+                	       		echo "<td>" . $row['status'] . "</td>";
+					echo "<td>" . $row['date_opened'] . "</td>";
+					echo "<td>" . $row['date_closed'] . "</td>";
+	                        	echo "</tr>";
+				}
                 	}
 
 		        echo "</table>

@@ -16,15 +16,15 @@
 	$reqType = 1;
 	$status = 0;
 	$incAmount = 1;
-	$dateOpened = mysqli_query($con, "SELECT NOW() as 'now'");
-	$date = mysqli_fetch_array($dateOpened);
-	$dateClosed = NULL;
-	$reason = 'reason here';
+	$dateClosed = 'NULL';
+	$reason = "reason here";
 
-	mysqli_query($con, "INSERT INTO Requests(userID, projID, facID, request_type, 
-						status , increase_amount, date_opened, date_closed, reason ) 
-						VALUES ($userID, $projID, $facID, $reqType, $status, $incAmount, $date, 2014-05-07, 'reason here')");
-
+	function sendRequest($userID, $projID, $facID, $reqType, $status, $incAmount, $date, $dateClosed)
+	{
+        $query = "INSERT INTO Requests(userID, projID, facID, status, increase_amount, date_opened, date_closed, reason ) 
+			      VALUES ($userID, $projID, $facID, $status, $incAmount, now(), $dateClosed, 'reason here')";
+		mysqli_query($con,$query);
+	}
 	/*
 
 	function sendRequest($userID, $projID, $facID, $reqType, $status, $incAmount, $date, $dateClosed)
