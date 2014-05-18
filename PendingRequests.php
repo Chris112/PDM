@@ -51,7 +51,7 @@ include 'commonElements.php';
                         <li><a href="ProjectSelection.php">Project Selection</a></li>
                         <li><a href="ApproveRequests.php">Approve Requests</a></li>
                         <li class="active"><a href="PendingRequests.php">Pending Requests</a></li>
-                        <li><a href="StorageRequests.php">Storage Request</a></li>
+                        <li><a href="StorageRequest.php">Storage Request</a></li>
                         <br><br>
                         <li><a href="logout.php">Log out</a></li>
                     </ul>
@@ -81,7 +81,21 @@ include 'commonElements.php';
                             echo "Failed to connect to MySQL: " . mysqli_connect_error();
                         }
 
-                        $result = mysqli_query($con, "SELECT * FROM Requests");
+                        $currUserSiteLevel = $_SESSION['currUser']['site_level'];
+                        $isPI = testIfPI($_SESSION['currUser']['userID']);
+
+                        if ($currUserSiteLevel == 3) { // If currUser is admin, display all requests
+                            $query = "SELECT * FROM Requests";
+                        } else { // oterhwise, display all requests that user has made
+                            $query = "SELECT * FROM Requests WHERE userID={$_SESSION['currUser']['userID']}";
+                        }
+
+
+
+
+
+
+                        $result = mysqli_query($con, $query);
 
                         echo "<table class=\"table\">
                     <tr>
@@ -98,7 +112,7 @@ include 'commonElements.php';
                             echo "<td>" . $row['increase_amount'] . "</td>";
                             echo "<td>" . $row['reason'] . "</td>";
                             echo "<td>" . $row['date_opened'] . "</td>";
-                            if ($row['status'] == 0){
+                            if ($row['status'] == 0) {
                                 echo "<td>Pending</td>";
                             } else if ($row['status'] == 1) {
                                 echo "<td>Approved</td>";
@@ -112,49 +126,49 @@ include 'commonElements.php';
                         ?>
 
 
-<!--
-                        <tr>
-                            <th>Project Name</th>
-                            <th>Requested Amount (GB)</th>
-                            <th>Reason</th>
-                            <th>Request Date</th>
-                            <th>Status</th>
-                        </tr>
-                        <tr>
-                            <td>Networking</td>
-                            <td>125</td>
-                            <td>New information about Networking</td>
-                            <td>6/10/2013</td>
-                            <td>Approved</td>
-                        </tr>
-                        <tr>
-                            <td>Networking</td>
-                            <td>100</td>
-                            <td>Technology being replaced</td>
-                            <td>14/02/2014</td>
-                            <td>Approved</td>
-                        </tr>
-                        <tr>
-                            <td>Networking</td>
-                            <td>1500</td>
-                            <td>High res pictures require more space</td>
-                            <td>19/04/2014</td>
-                            <td>Declined</td>
-                        </tr>
-                        <tr>
-                            <td>Software Engineering</td>
-                            <td>500</td>
-                            <td>New research methods</td>
-                            <td>27/04/2014</td>
-                            <td>Pending</td>
-                        </tr>
-                        <tr>
-                            <td>Software Engineering</td>
-                            <td>50</td>
-                            <td></td>
-                            <td>22/05/2014</td>
-                            <td>Pending</td>
-                        </tr>-->
+                        <!--
+                                                <tr>
+                                                    <th>Project Name</th>
+                                                    <th>Requested Amount (GB)</th>
+                                                    <th>Reason</th>
+                                                    <th>Request Date</th>
+                                                    <th>Status</th>
+                                                </tr>
+                                                <tr>
+                                                    <td>Networking</td>
+                                                    <td>125</td>
+                                                    <td>New information about Networking</td>
+                                                    <td>6/10/2013</td>
+                                                    <td>Approved</td>
+                                                </tr>
+                                                <tr>
+                                                    <td>Networking</td>
+                                                    <td>100</td>
+                                                    <td>Technology being replaced</td>
+                                                    <td>14/02/2014</td>
+                                                    <td>Approved</td>
+                                                </tr>
+                                                <tr>
+                                                    <td>Networking</td>
+                                                    <td>1500</td>
+                                                    <td>High res pictures require more space</td>
+                                                    <td>19/04/2014</td>
+                                                    <td>Declined</td>
+                                                </tr>
+                                                <tr>
+                                                    <td>Software Engineering</td>
+                                                    <td>500</td>
+                                                    <td>New research methods</td>
+                                                    <td>27/04/2014</td>
+                                                    <td>Pending</td>
+                                                </tr>
+                                                <tr>
+                                                    <td>Software Engineering</td>
+                                                    <td>50</td>
+                                                    <td></td>
+                                                    <td>22/05/2014</td>
+                                                    <td>Pending</td>
+                                                </tr>-->
                     </table>
                 </div>
             </div>

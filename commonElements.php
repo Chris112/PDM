@@ -52,6 +52,11 @@
 
 	function importCoreCSS() {
 		echo "<link href = \"css/bootstrap.min.css\" rel = \"stylesheet\">";
+              //  echo "<script src=\"js/jquery-1.11.0.min.js\"></script>"; // should go at end of page that requires it
 		echo "<link href = \"css/sticky-footer-navbar.css\" rel = \"stylesheet\">";
 	}
+        
+
+        
+        
 ?>
