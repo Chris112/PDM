@@ -85,22 +85,20 @@ include 'commonElements.php';
                         $isPI = testIfPI($_SESSION['currUser']['userID']);
 
                         if ($currUserSiteLevel == 3) { // If currUser is admin, display all requests
-                            $query = "SELECT * FROM Requests";
-                        } else { // oterhwise, display all requests that user has made
-                            $query = "SELECT * FROM Requests WHERE userID={$_SESSION['currUser']['userID']}";
+                            $query = "SELECT * FROM Requests ORDER BY date_opened";
+                        } else if ($currUserSiteLevel == 2) { // If user is an Approver, don't display Project Name
+                            $query = "SELECT * FROM Requests WHERE userID={$_SESSION['currUser']['userID']} ORDER BY date_opened";
+                        } else if ($currUserSiteLevel == 1) { // If user is a Researcher, display all requests they've made for all projects.
+                            $query = "SELECT * FROM Requests WHERE userID={$_SESSION['currUser']['userID']} ORDER BY date_opened";
                         }
-
-
-
-
-
-
                         $result = mysqli_query($con, $query);
 
                         echo "<table class=\"table\">
-                    <tr>
-                    <th>Project Name</th>
-                    <th>Requested Amount (GB)</th>
+                    <tr>";
+                        if ($currUserSiteLevel == 1) {
+                            echo "<th>Project Name</th>";
+                        }
+                        echo "<th>Requested Amount (GB)</th>
                     <th>Reason</th>
                     <th>Request Date</th>
                     <th>Status</th>
@@ -108,7 +106,9 @@ include 'commonElements.php';
 
                         while ($row = mysqli_fetch_array($result)) {
                             echo "<tr>";
-                            echo "<td>" . lookupProjName($row['projID']) . "</td>";
+                            if ($currUserSiteLevel == 1) {
+                                echo "<td>" . lookupProjName($row['projID']) . "</td>";
+                            }
                             echo "<td>" . $row['increase_amount'] . "</td>";
                             echo "<td>" . $row['reason'] . "</td>";
                             echo "<td>" . $row['date_opened'] . "</td>";
@@ -124,51 +124,6 @@ include 'commonElements.php';
                         echo "</table>";
                         mysqli_close($con);
                         ?>
-
-
-                        <!--
-                                                <tr>
-                                                    <th>Project Name</th>
-                                                    <th>Requested Amount (GB)</th>
-                                                    <th>Reason</th>
-                                                    <th>Request Date</th>
-                                                    <th>Status</th>
-                                                </tr>
-                                                <tr>
-                                                    <td>Networking</td>
-                                                    <td>125</td>
-                                                    <td>New information about Networking</td>
-                                                    <td>6/10/2013</td>
-                                                    <td>Approved</td>
-                                                </tr>
-                                                <tr>
-                                                    <td>Networking</td>
-                                                    <td>100</td>
-                                                    <td>Technology being replaced</td>
-                                                    <td>14/02/2014</td>
-                                                    <td>Approved</td>
-                                                </tr>
-                                                <tr>
-                                                    <td>Networking</td>
-                                                    <td>1500</td>
-                                                    <td>High res pictures require more space</td>
-                                                    <td>19/04/2014</td>
-                                                    <td>Declined</td>
-                                                </tr>
-                                                <tr>
-                                                    <td>Software Engineering</td>
-                                                    <td>500</td>
-                                                    <td>New research methods</td>
-                                                    <td>27/04/2014</td>
-                                                    <td>Pending</td>
-                                                </tr>
-                                                <tr>
-                                                    <td>Software Engineering</td>
-                                                    <td>50</td>
-                                                    <td></td>
-                                                    <td>22/05/2014</td>
-                                                    <td>Pending</td>
-                                                </tr>-->
                     </table>
                 </div>
             </div>

@@ -28,7 +28,7 @@ function lookupFacName($facID) {
     } else {
         $query = "SELECT name FROM Faculties WHERE facID=$facID";
         $result = mysqli_query($con, $query);
-        // If result is NULL, currUser is an admin.
+// If result is NULL, currUser is an admin.
         if ($result != false) {
             $row = mysqli_fetch_array($result, MYSQLI_ASSOC);
             mysqli_close($con);
@@ -69,6 +69,19 @@ function lookupProjName($projID) {
     }
 }
 
+function lookupFacIDOfProj($projName) {
+    $con = mysqli_connect('localhost', 'samcalab_chriswb', 'uz,vt78?zYpwu*CV6', 'samcalab_uniproject');
+    if (mysqli_connect_errno()) {
+        echo "Failed to connect to MySQL: " . mysqli_connect_error();
+    } else {
+        $query = "SELECT facID FROM Projects WHERE name=\"$projName\"";
+        $result = mysqli_query($con, $query);
+        $row = mysqli_fetch_array($result, MYSQLI_ASSOC);
+        mysqli_close($con);
+        return $row['facID'];
+    }
+}
+
 function lookupProjID($projName) {
     $con = mysqli_connect('localhost', 'samcalab_chriswb', 'uz,vt78?zYpwu*CV6', 'samcalab_uniproject');
     if (mysqli_connect_errno()) {
@@ -97,16 +110,71 @@ function lookupUserRegDate($userID) {
     }
 }
 
-function lookupUserPermission($userID){
-     $con = mysqli_connect('localhost', 'samcalab_chriswb', 'uz,vt78?zYpwu*CV6', 'samcalab_uniproject');
+function lookupUserPermission($userID, $projID) {
+    $con = mysqli_connect('localhost', 'samcalab_chriswb', 'uz,vt78?zYpwu*CV6', 'samcalab_uniproject');
     if (mysqli_connect_errno()) {
         echo "Failed to connect to MySQL: " . mysqli_connect_error();
     } else {
-        $query = "SELECT permissions FROM User_Projects WHERE userID=$userID";
+        $query = "SELECT permissions FROM User_Projects WHERE userID=$userID AND projID=$projID";
         $result = mysqli_query($con, $query);
         $data = mysqli_fetch_array($result, MYSQLI_ASSOC);
         mysqli_close($con);
         return $data['permissions'];
+    }
+}
+
+function lookupSiteLevel($userID) {
+    $con = mysqli_connect('localhost', 'samcalab_chriswb', 'uz,vt78?zYpwu*CV6', 'samcalab_uniproject');
+    if (mysqli_connect_errno()) {
+        echo "Failed to connect to MySQL: " . mysqli_connect_error();
+    } else {
+        $query = "SELECT site_level FROM Users WHERE userID=$userID";
+        echo $query;
+        $result = mysqli_query($con, $query);
+        $data = mysqli_fetch_array($result, MYSQLI_ASSOC);
+        mysqli_close($con);
+        return $data['site_level'];
+    }
+}
+
+function lookupUsersFacID($userID) {
+    $con = mysqli_connect('localhost', 'samcalab_chriswb', 'uz,vt78?zYpwu*CV6', 'samcalab_uniproject');
+    if (mysqli_connect_errno()) {
+        echo "Failed to connect to MySQL: " . mysqli_connect_error();
+    } else {
+        $query = "SELECT facID FROM Users WHERE userID=$userID";
+        $result = mysqli_query($con, $query);
+        $data = mysqli_fetch_array($result, MYSQLI_ASSOC);
+        mysqli_close($con);
+        return $data['facID'];
+    }
+}
+
+function lookupProjPI($projIDOrProjName) {
+
+    // Input might be an ID or a name
+    if (is_numeric($projIDOrProjName)) {
+        $con = mysqli_connect('localhost', 'samcalab_chriswb', 'uz,vt78?zYpwu*CV6', 'samcalab_uniproject');
+        if (mysqli_connect_errno()) {
+            echo "Failed to connect to MySQL: " . mysqli_connect_error();
+        } else {
+            $query = "SELECT prim_invest FROM Projects WHERE projID=$projIDOrProjName";
+            $result = mysqli_query($con, $query);
+            $data = mysqli_fetch_array($result, MYSQLI_ASSOC);
+            mysqli_close($con);
+            return $data['prim_invest'];
+        }
+    } else {
+        $con = mysqli_connect('localhost', 'samcalab_chriswb', 'uz,vt78?zYpwu*CV6', 'samcalab_uniproject');
+        if (mysqli_connect_errno()) {
+            echo "Failed to connect to MySQL: " . mysqli_connect_error();
+        } else {
+            $query = "SELECT prim_invest FROM Projects WHERE name=\"$projIDOrProjName\"";
+            $result = mysqli_query($con, $query);
+            $data = mysqli_fetch_array($result, MYSQLI_ASSOC);
+            mysqli_close($con);
+            return $data['prim_invest'];
+        }
     }
 }
 
@@ -118,11 +186,11 @@ function addFileToProJ($projName, $newFileSize, $currUsed, $currFree) {
         $newUsed = $currUsed + $newFileSize;
         $newFree = $currFree - $newFileSize;
 
-        // update project used
+// update project used
         $query1 = "UPDATE Projects SET used_space=$newUsed WHERE name=\"$projName\"";
         $result1 = mysqli_query($con, $query1);
 
-        // update project free
+// update project free
         $query2 = "UPDATE Projects SET free_space=$newFree WHERE name=\"$projName\"";
         $result2 = mysqli_query($con, $query2);
 
@@ -133,7 +201,7 @@ function addFileToProJ($projName, $newFileSize, $currUsed, $currFree) {
 function removeFileFromProj($projName, $currUsed, $currFree, $filename) {
     $con = mysqli_connect('localhost', 'samcalab_chriswb', 'uz,vt78?zYpwu*CV6', 'samcalab_uniproject');
 
-    // get file size
+// get file size
     $query1 = "SELECT size FROM Files WHERE filename=\"$filename\"";
     $result1 = mysqli_query($con, $query1);
     $fileSize = mysqli_fetch_array($result1, MYSQLI_ASSOC);
@@ -141,10 +209,10 @@ function removeFileFromProj($projName, $currUsed, $currFree, $filename) {
     $newUsed = $currUsed - $fileSize['size'];
     $newFree = $currFree + $fileSize['size'];
 
-    // update used_space
+// update used_space
     $query2 = "UPDATE Projects SET used_space=$newUsed WHERE name=\"$projName\"";
     $result2 = mysqli_query($con, $query2);
-    //update free_space
+//update free_space
     $query3 = "UPDATE Projects SET free_space=$newFree WHERE name=\"$projName\"";
     $result3 = mysqli_query($con, $query3);
 
@@ -178,17 +246,17 @@ function getApproverIDOfFac($facID) {
 
 function giveRead($userID) {
     $con = mysqli_connect('localhost', 'samcalab_chriswb', 'uz,vt78?zYpwu*CV6', 'samcalab_uniproject');
-    // get current permission level
+// get current permission level
     $query1 = "SELECT permissions FROM User_Projects WHERE userID=$userID";
     $result1 = mysqli_query($con, $query1);
     $data = mysqli_fetch_array($result1, MYSQLI_ASSOC);
     $perm = $data['permissions'];
 
-    // if user doesn't have read, give it to them, otherwise do nothing
+// if user doesn't have read, give it to them, otherwise do nothing
     if ($perm == 1 OR $perm == 3) {
         return;
     } else if ($perm == 0) {
-        // give user read
+// give user read
         $perm = 1;
         $query2 = "UPDATE User_Projects SET permissions=$perm WHERE userID=$userID";
         $result2 = mysqli_query($con, $query2);
@@ -196,7 +264,7 @@ function giveRead($userID) {
             echo "ERROR GIVING A USER READ.<br>";
         }
     } else if ($perm == 2) {
-        // give user read
+// give user read
         $perm = 3;
         $query2 = "UPDATE User_Projects SET permissions=$perm WHERE userID=$userID";
         $result2 = mysqli_query($con, $query2);
@@ -208,17 +276,17 @@ function giveRead($userID) {
 
 function takeRead($userID) {
     $con = mysqli_connect('localhost', 'samcalab_chriswb', 'uz,vt78?zYpwu*CV6', 'samcalab_uniproject');
-    // get current permission level
+// get current permission level
     $query1 = "SELECT permissions FROM User_Projects WHERE userID=$userID";
     $result1 = mysqli_query($con, $query1);
     $data = mysqli_fetch_array($result1, MYSQLI_ASSOC);
     $perm = $data['permissions'];
     $oldPerm = $perm;
 
-    // if user has read, take it from them, otherwise do nothing
+// if user has read, take it from them, otherwise do nothing
     if ($perm == 1 OR $perm == 3) {
 
-        // take users read
+// take users read
         $perm--;
         $query2 = "UPDATE User_Projects SET permissions=$perm WHERE userID=$userID";
         $result2 = mysqli_query($con, $query2);
@@ -232,17 +300,17 @@ function takeRead($userID) {
 
 function giveWrite($userID) {
     $con = mysqli_connect('localhost', 'samcalab_chriswb', 'uz,vt78?zYpwu*CV6', 'samcalab_uniproject');
-    // get current permission level
+// get current permission level
     $query1 = "SELECT permissions FROM User_Projects WHERE userID=$userID";
     $result1 = mysqli_query($con, $query1);
     $data = mysqli_fetch_array($result1, MYSQLI_ASSOC);
     $perm = $data['permissions'];
 
-    // if user doesn't have write, give it to them, otherwise do nothing
+// if user doesn't have write, give it to them, otherwise do nothing
     if ($perm == 2 OR $perm == 3) {
         return;
     } else if ($perm == 0) {
-        // give user just read
+// give user just read
         $perm = 2;
         $query2 = "UPDATE User_Projects SET permissions=$perm WHERE userID=$userID";
         $result2 = mysqli_query($con, $query2);
@@ -250,7 +318,7 @@ function giveWrite($userID) {
             echo "ERROR GIVING A USER WRITE.<br>";
         }
     } else if ($perm == 1) {
-        // give user just read
+// give user just read
         $perm = 3;
         $query2 = "UPDATE User_Projects SET permissions=$perm WHERE userID=$userID";
         $result2 = mysqli_query($con, $query2);
@@ -262,15 +330,15 @@ function giveWrite($userID) {
 
 function takeWrite($userID) {
     $con = mysqli_connect('localhost', 'samcalab_chriswb', 'uz,vt78?zYpwu*CV6', 'samcalab_uniproject');
-    // get current permission level
+// get current permission level
     $query1 = "SELECT permissions FROM User_Projects WHERE userID=$userID";
     $result1 = mysqli_query($con, $query1);
     $data = mysqli_fetch_array($result1, MYSQLI_ASSOC);
     $perm = $data['permissions'];
-    // if user has read, take it from them, otherwise do nothing
+// if user has read, take it from them, otherwise do nothing
     if ($perm == 2) {
 
-        // take users read
+// take users read
         $perm = 0;
         $query2 = "UPDATE User_Projects SET permissions=$perm WHERE userID=$userID";
         $result2 = mysqli_query($con, $query2);
@@ -280,7 +348,7 @@ function takeWrite($userID) {
     } else if ($perm == 0 OR $perm == 1) {
         return;
     } else if ($perm == 3) {
-        // take users read
+// take users read
         $perm = 2;
         $query2 = "UPDATE User_Projects SET permissions=$perm WHERE userID=$userID";
         $result2 = mysqli_query($con, $query2);

@@ -56,10 +56,10 @@ if (isset($_POST['submit'])) {
             }
             addFileToProJ($_GET['action'], $_POST['size'], $used['used_space'], $free['free_space']);
         } else {
-            //   echo "Name can not be empty.";
+//   echo "Name can not be empty.";
         }
     } else {
-        // echo "Not enough space to upload.";
+// echo "Not enough space to upload.";
     }
 }
 
@@ -117,9 +117,20 @@ $used = mysqli_fetch_array($usedResult, MYSQLI_ASSOC);
                         <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
                         <h4 class="modal-title" id="myModalLabel">File Download</h4>
                     </div>
-                    <div class="modal-body">
-                        File successfully downloaded.
-                    </div>
+                    <?php
+                    $perm = lookupUserPermission($_SESSION['currUser']['userID'], lookupProjID($_GET['action']));
+                    $siteLevel = $_SESSION['currUser']['site_level'];
+                    if (($perm == 1 OR $perm >= 3) OR $siteLevel >= 2) {
+                        echo "<div class = \"modal-body\">
+                    File successfully downloaded.
+                    </div>";
+                    } else {
+                        echo "<div class = \"modal-body\">
+                    You do not have read privlidges on this project, unable to downloaded file.
+                    </div>";
+                    }
+                    ?>
+
                     <div class="modal-footer">
                         <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
                     </div>
@@ -185,8 +196,8 @@ $used = mysqli_fetch_array($usedResult, MYSQLI_ASSOC);
                             <div align="center">
                                 <form action="<?php $_PHP_SELF ?>" method="POST">
                                     <div class="control-group">
-                                        <label class="control-label" for="Fruitname1" align="center">Do you wish to delete a file?</label>
-                                        <select id="Fruitname1" name="filename"  required="required" align="center">
+                                        <label class="control-label" align="center">Do you wish to delete a file?</label>
+                                        <select name="filename"  required="required" align="center">
                                             <option value="">File Name</option>
                                             <?php
                                             $con = mysqli_connect('localhost', 'samcalab_chriswb', 'uz,vt78?zYpwu*CV6', 'samcalab_uniproject');
@@ -215,8 +226,16 @@ $used = mysqli_fetch_array($usedResult, MYSQLI_ASSOC);
                                     } else {
                                         echo "<br><br><br>";
                                     }
-                                    ?>
-                                    <button class="btn btn-danger btn-block" type="submit" value="deleteButton" name="deleteButton">Delete file</button>
+                                    
+                                    if (($perm == 2 OR $perm >= 3) OR $siteLevel >= 2) {
+                                        echo"<button class=\"btn btn-danger btn-block\" type=\"submit\" value=\"deleteButton\" name=\"deleteButton\">Delete file</button>";
+                                    } else {
+                                        echo "<button class=\"btn btn-danger btn-block disabled\" type=\"submit\" value=\"deleteButton\" name=\"deleteButton\">Delete file</button>";
+                                    }
+                                    
+                                            
+                                            
+                                            ?>
                                 </form>
                             </div>
                         </div>
@@ -238,8 +257,14 @@ $used = mysqli_fetch_array($usedResult, MYSQLI_ASSOC);
                                     <span class="input-group-addon">GB</span>
                                 </div>
                                 <br><br>
+                                <?php
+                                if (($perm == 2 OR $perm >= 3) OR $siteLevel >= 2) {
+                                    echo "<button class=\"btn btn-success btn-block\" type=\"submit\" value=\"submit\" name=\"submit\">Upload file</button>";
+                                } else {
+                                    echo "<button class=\"btn btn-success btn-block disabled\" type=\"submit\" value=\"submit\" name=\"submit\">Upload file</button>";
+                                }
+                                ?>
 
-                                <button class="btn btn-success btn-block" type="submit" value="submit" name="submit">Upload file</button>
 
 
                                 <br><br>
@@ -282,10 +307,18 @@ $used = mysqli_fetch_array($usedResult, MYSQLI_ASSOC);
                         </div>
                         <br><br><br><br><br>
 
-
-                        <button class="btn btn-primary b" data-toggle="modal" data-target="#myModal">
+                        <?php
+                        if (($perm == 1 OR $perm >= 3) OR $siteLevel >= 2) {
+                            echo "<button class=\"btn btn-primary b\" data-toggle=\"modal\" data-target=\"#myModal\">
                             Download Selected File
-                        </button>
+                        </button>";
+                        } else {
+                            echo "<button class=\"btn btn-primary b disabled\" data-toggle=\"modal\" data-target=\"#myModal\">
+                            Download Selected File
+                        </button>";
+                        }
+                        ?>
+
                     </div> <!-- End of Download column -->
                 </div>
             </div>
