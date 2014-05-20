@@ -32,7 +32,7 @@ if (isset($_POST['submit'])) {
         /* Required info for a request */
         $userID = $_SESSION['currUser']['userID'];
         $facID = $_SESSION['currUser']['facID'];
-        if (is_numeric($_POST['incAmount']) AND $_POST['incAmount'] < 100000000) { // some arbitrary max so user doesn't enter a billion digits
+        if (is_numeric($_POST['incAmount']) AND $_POST['incAmount'] <= 100000000) { // some arbitrary max so user doesn't enter a billion digits
             $incAmount = $_POST['incAmount'];
             $validInput = true;
         } else {
@@ -45,6 +45,8 @@ if (isset($_POST['submit'])) {
             $query = "INSERT INTO Requests(userID, facID, increase_amount, date_opened, reason ) 
 			      VALUES ($userID, $facID, $incAmount, $dateCreated, \"$reason\")";
             $result = mysqli_query($con, $query);
+        } else {
+            $validSubmit = false;
         }
         if ($result) {
             $validSubmit = true;
@@ -58,7 +60,7 @@ if (isset($_POST['submit'])) {
         /* Required info for a request */
         $userID = $_SESSION['currUser']['userID'];
         $facID = $_SESSION['currUser']['facID'];
-        $projID = $_SESSION['currUser']['projID']; // fix this
+        $projID = $_POST['projSelection'];
         if (is_numeric($_POST['incAmount']) AND $_POST['incAmount'] < 100000000) { // some arbitrary max so user doesn't enter a billion digits
             $incAmount = $_POST['incAmount'];
             $validInput = true;
@@ -72,12 +74,15 @@ if (isset($_POST['submit'])) {
             $query = "INSERT INTO Requests(userID, projID, facID, increase_amount, date_opened, reason ) 
 			      VALUES ($userID, $projID, $facID, $incAmount, $dateCreated, \"$reason\")";
             $result = mysqli_query($con, $query);
-        }
-        if ($result) {
-            $validSubmit = true;
+            if ($result) {
+                $validSubmit = true;
+            } else {
+                $validSubmit = false;
+            }
         } else {
             $validSubmit = false;
         }
+
         mysqli_close($con);
     } else if ($userLevel == "DM") { // Creating a request for a DM
         $con = mysqli_connect('localhost', 'samcalab_chriswb', 'uz,vt78?zYpwu*CV6', 'samcalab_uniproject');
