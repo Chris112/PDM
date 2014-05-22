@@ -66,6 +66,7 @@ if (isset($_POST['commentAdd'])) {
                         <li class="active"><a href="ApproveRequests.php">Approve Requests</a></li>
                         <li><a href="PendingRequests.php">Pending Requests</a></li>
                         <li><a href="StorageRequest.php">Storage Request</a></li>
+                        <li><a href="Notifications.php">Notifications</a></li>
                         <br><br>
                         <li><a href="logout.php">Log out</a></li>
                     </ul>
@@ -103,7 +104,6 @@ if (isset($_POST['commentAdd'])) {
 				<th>Increase Amount</th>
 				<th>Status</th>
 				<th>Date Opened</th>
-				<th>Date Closed</th>
                                 <th>Reason</th>
                                 <th>Admin Comment</th>
         	            	</tr>";
@@ -135,11 +135,18 @@ if (isset($_POST['commentAdd'])) {
                             mysqli_query($con, "UPDATE Requests SET status = 1, date_closed = now() WHERE reqID = " . $textReqID);
                             $requestamount = mysqli_query($con, "SELECT increase_amount FROM Requests WHERE reqID = " . $textReqID);
 
+
                             $amount = mysqli_fetch_array($requestamount);
                             mysqli_query($con, "UPDATE Faculties SET total_space = total_space + " .
                                     $amount['increase_amount'] . " WHERE facID = " . $fac['facID']);
                             mysqli_query($con, "UPDATE Faculties SET free_space = free_space + " .
                                     $amount['increase_amount'] . " WHERE facID = " . $fac['facID']);
+
+                            // create notification for the user that just had his request accepted
+                            $result3 = mysqli_query($con, "SELECT userID FROM Requests WHERE reqID = $textReqID");
+                            $requesterID = mysqli_fetch_array($result3, MYSQLI_ASSOC);
+                            $string = "INSERT into Notifications(userID, info, date) values ({$requesterID['userID']}, \"Your request for storage has been approved!\", now())";
+                            mysqli_query($con, $string);
                         }
                     }
 
@@ -151,6 +158,12 @@ if (isset($_POST['commentAdd'])) {
                             $validApprove2 = true;
                             $textReqID = $_POST['textReqID'];
                             mysqli_query($con, "UPDATE Requests SET status = 2, date_closed = now() WHERE reqID = " . $textReqID);
+
+                            // create notification for the user that just had his request declined
+                            $result3 = mysqli_query($con, "SELECT userID FROM Requests WHERE reqID = $textReqID");
+                            $requesterID = mysqli_fetch_array($result3, MYSQLI_ASSOC);
+                            $string = "INSERT into Notifications(userID, info, date) values ({$requesterID['userID']}, \"Your request for storage has been declined.\", now())";
+                            mysqli_query($con, $string);
                         }
                     }
 
@@ -172,7 +185,6 @@ if (isset($_POST['commentAdd'])) {
                             }
 
                             echo "<td>" . $row['date_opened'] . "</td>";
-                            echo "<td>" . $row['date_closed'] . "</td>";
                             echo "<td>" . substr($row['reason'], 0, 20) . "</td>";
                             echo "<td>" . substr($row['adminComment'], 0, 40) . "</td>";
                             echo "</tr>";
@@ -239,6 +251,13 @@ if (isset($_POST['commentAdd'])) {
 
                             mysqli_query($con, "UPDATE Faculties SET used_space = used_space + " .
                                     $amount['increase_amount'] . " WHERE facID = " . $pro['facID']);
+
+
+                            // create notification for the user that just had his request accepted
+                            $result3 = mysqli_query($con, "SELECT userID FROM Requests WHERE reqID = $textReqID");
+                            $requesterID = mysqli_fetch_array($result3, MYSQLI_ASSOC);
+                            $string = "INSERT into Notifications(userID, info, date) values ({$requesterID['userID']}, \"Your request for storage has been approved!\", now())";
+                            mysqli_query($con, $string);
                         }
                     }
 
@@ -250,6 +269,12 @@ if (isset($_POST['commentAdd'])) {
                             $validApprove4 = true;
                             $textReqID = $_POST['textReqID'];
                             mysqli_query($con, "UPDATE Requests SET status = 2, date_closed = now() WHERE reqID = " . $textReqID);
+
+                            // create notification for the user that just had his request accepted
+                            $result3 = mysqli_query($con, "SELECT userID FROM Requests WHERE reqID = $textReqID");
+                            $requesterID = mysqli_fetch_array($result3, MYSQLI_ASSOC);
+                            $string = "INSERT into Notifications(userID, info, date) values ({$requesterID['userID']}, \"Your request for storage has been declined.\", now())";
+                            mysqli_query($con, $string);
                         }
                     }
 
@@ -331,6 +356,12 @@ if (isset($_POST['commentAdd'])) {
                                 }
                             }
                         }
+
+                        // create notification for the user that just had his request accepted
+                        $result3 = mysqli_query($con, "SELECT userID FROM Requests WHERE reqID = $textReqID");
+                        $requesterID = mysqli_fetch_array($result3, MYSQLI_ASSOC);
+                        $string = "INSERT into Notifications(userID, info, date) values ({$requesterID['userID']}, \"Your request for storage has been approved!\", now())";
+                        mysqli_query($con, $string);
                     }
 
                     if (isset($_POST['decline'])) {
@@ -346,6 +377,11 @@ if (isset($_POST['commentAdd'])) {
                                 $result = mysqli_query($con, "UPDATE Requests SET status = 2, date_closed = now() WHERE reqID = " . $textReqID);
                                 if ($result) {
                                     $validApprove6 = true;
+                                    // create notification for the user that just had his request accepted
+                                    $result3 = mysqli_query($con, "SELECT userID FROM Requests WHERE reqID = $textReqID");
+                                    $requesterID = mysqli_fetch_array($result3, MYSQLI_ASSOC);
+                                    $string = "INSERT into Notifications(userID, info, date) values ({$requesterID['userID']}, \"Your request for storage has been declined.\", now())";
+                                    mysqli_query($con, $string);
                                 }
                             }
                         }
@@ -400,34 +436,34 @@ if (isset($_POST['commentAdd'])) {
 
                             <input class = "btn btn-default btn-block" type="submit" name="approve" value="Approve Request">
                             <input class = "btn btn-default btn-block" type="submit" name="decline" value="Decline Request">
-                            <?php
-                            if (isset($_POST['approve'])) {
-                                if ($validApprove1 == true or $validApprove3 == true or $validApprove5 == true) {
-                                    echo "<font color=\"green\"> Successfully approved request!</font><br><br>";
-                                } else {
-                                    echo "<font color=\"red\"> Unable to approve request.</font><br><br>";
-                                }
-                            } else {
-                                echo "<br><br><br>";
-                            }
+<?php
+if (isset($_POST['approve'])) {
+    if ($validApprove1 == true or $validApprove3 == true or $validApprove5 == true) {
+        echo "<font color=\"green\"> Successfully approved request!</font><br><br>";
+    } else {
+        echo "<font color=\"red\"> Unable to approve request.</font><br><br>";
+    }
+} else {
+    echo "<br><br><br>";
+}
 
-                            if (isset($_POST['decline'])) {
-                                if ($validApprove2 == true or $validApprove4 == true or $validApprove6 == true) {
-                                    echo "<font color=\"green\"> Successfully declined request!</font><br><br>";
-                                } else {
-                                    echo "<font color=\"red\"> Unable to decline request.</font><br><br>";
-                                }
-                            } else {
-                                echo "<br><br><br>";
-                            }
-                            ?>
+if (isset($_POST['decline'])) {
+    if ($validApprove2 == true or $validApprove4 == true or $validApprove6 == true) {
+        echo "<font color=\"green\"> Successfully declined request!</font><br><br>";
+    } else {
+        echo "<font color=\"red\"> Unable to decline request.</font><br><br>";
+    }
+} else {
+    echo "<br><br><br>";
+}
+?>
 
                         </form></div></div></div>
 
 
-            <?php
-            if ($_SESSION['currUser']['site_level'] == 3) {
-                echo '
+                            <?php
+                            if ($_SESSION['currUser']['site_level'] == 3) {
+                                echo '
             <div class="col-md-3" align="center">
                 <div class="panel panel-primary">
                     <div class="panel-heading panel-primary">
@@ -439,19 +475,19 @@ if (isset($_POST['commentAdd'])) {
                             <input class="form-control" type="text" name="adminComment" required="required"  placeholder="Enter Comment"><br>
                             <input class = "btn btn-default btn-block" type="submit" name="commentAdd" value="Add Comment">';
 
-                if (isset($_POST['commentAdd'])) {
-                    if ($validComment) {
-                        echo "<font color=\"green\"> Successfully added comment to request!</font><br><br>";
-                    } else {
-                        echo "<font color=\"red\"> Unable to comment to request.</font><br><br>";
-                    }
-                } else {
-                    echo "<br><br><br>";
-                }
+                                if (isset($_POST['commentAdd'])) {
+                                    if ($validComment) {
+                                        echo "<font color=\"green\"> Successfully added comment to request!</font><br><br>";
+                                    } else {
+                                        echo "<font color=\"red\"> Unable to comment to request.</font><br><br>";
+                                    }
+                                } else {
+                                    echo "<br><br><br>";
+                                }
 
-                echo '</form></div></div></div>';
-            }
-            ?>
+                                echo '</form></div></div></div>';
+                            }
+                            ?>
 
             <?php displayFooter(); ?>
             <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->

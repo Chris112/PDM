@@ -52,6 +52,7 @@ include 'commonElements.php';
                         <li><a href="ApproveRequests.php">Approve Requests</a></li>
                         <li class="active"><a href="PendingRequests.php">Pending Requests</a></li>
                         <li><a href="StorageRequest.php">Storage Request</a></li>
+                        <li><a href="Notifications.php">Notifications</a></li>
                         <br><br>
                         <li><a href="logout.php">Log out</a></li>
                     </ul>

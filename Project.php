@@ -58,13 +58,29 @@ function lookupProjID2($projName) {
             if (isset($_POST['read' . $i]) AND isset($_POST['write' . $i])) { // both are set
                 giveRead($collab['userID']);
                 giveWrite($collab['userID']);
+                // create notification for the user that functions they have received
+                $requesterID = $collab['userID'];
+                $string = "INSERT into Notifications(userID, info, date) values ($requesterID, \"You have been given Read and Write access on the project {$_GET['action']}\", now())";
+                mysqli_query($con, $string);
             } else if (!isset($_POST['read' . $i]) AND ! isset($_POST['write' . $i])) { // neither are set
                 takeRead($collab['userID']);
                 takeWrite($collab['userID']);
+                // create notification for the user that functions they have received
+                $requesterID = $collab['userID'];
+                $string = "INSERT into Notifications(userID, info, date) values ($requesterID, \"You have been lost Read and Write access on the project {$_GET['action']}\", now())";
+                mysqli_query($con, $string);
             } else if (!isset($_POST['read' . $i]) AND isset($_POST['write' . $i])) { // read is not set but write is
                 giveWriteTakeRead($collab['userID']);
+                // create notification for the user that functions they have received
+                $requesterID = $collab['userID'];
+                $string = "INSERT into Notifications(userID, info, date) values ($requesterID, \"You now have write access but not read on the project {$_GET['action']}\", now())";
+                mysqli_query($con, $string);
             } else if (isset($_POST['read' . $i]) AND ! isset($_POST['write' . $i])) { // write is set but not read
                 giveReadTakeWrite($collab['userID']);
+                // create notification for the user that functions they have received
+                $requesterID = $collab['userID'];
+                $string = "INSERT into Notifications(userID, info, date) values ($requesterID, \"You now have read access but not write on the project {$_GET['action']}\", now())";
+                mysqli_query($con, $string);
             }
         }
         $RWchanges = true;
@@ -76,8 +92,8 @@ function lookupProjID2($projName) {
             $targetsID = $_POST['textBox2'];
             $targetsFacID = lookupUsersFacID($targetsID);
             // can't add a researcher form another faculty.
-            echo "TARGETS FAC ID: " . $targetsFacID . ".<br>";
-            echo "CURRENT PROJECTS(" . $_GET['action'] . ") FACID: " . lookupFacIDOfProj($_GET['action']) . ".<br>";
+            //echo "TARGETS FAC ID: " . $targetsFacID . ".<br>";
+            //echo "CURRENT PROJECTS(" . $_GET['action'] . ") FACID: " . lookupFacIDOfProj($_GET['action']) . ".<br>";
             if ($targetsFacID == lookupFacIDOfProj($_GET['action'])) {
                 $con = mysqli_connect('localhost', 'samcalab_chriswb', 'uz,vt78?zYpwu*CV6', 'samcalab_uniproject');
                 $projID = lookupProjID($_GET['action']);
@@ -87,6 +103,10 @@ function lookupProjID2($projName) {
                     $result = mysqli_query($con, $query);
                     if ($result) {
                         $validAddCollab = true;
+                        // create notification for the user that just been added to the project
+                        $requesterID = $_POST['textBox2'];
+                        $string = "INSERT into Notifications(userID, info, date) values ($requesterID, \"You have been added to the project {$_GET['action']}!\", now())";
+                        mysqli_query($con, $string);
                     }
                 } else {
                     $validAddCollab = false;
@@ -107,6 +127,10 @@ function lookupProjID2($projName) {
             $result = mysqli_query($con, $query);
             if ($result) {
                 $validRemoveCollab = true;
+                // create notification for the user that just been removed from project
+                $requesterID = $_POST['textBox2'];
+                $string = "INSERT into Notifications(userID, info, date) values ($requesterID, \"You have been removed from the project {$_GET['action']}\", now())";
+                mysqli_query($con, $string);
             }
         } else {
             $validRemoveCollab = false;
@@ -114,7 +138,7 @@ function lookupProjID2($projName) {
     }
 
     if (isset($_POST['promoteToDM'])) {
-        if (is_numeric($_POST['textBox2']) ) {
+        if (is_numeric($_POST['textBox2'])) {
             $con = mysqli_connect('localhost', 'samcalab_chriswb', 'uz,vt78?zYpwu*CV6', 'samcalab_uniproject');
             $projID = lookupProjID($_GET['action']);
             $targetUserID = $_POST['textBox2'];
@@ -122,6 +146,10 @@ function lookupProjID2($projName) {
             $result = mysqli_query($con, $query);
             if ($result) {
                 $validPromotion = true;
+                // create notification for the user that just been promoted
+                $requesterID = $targetUserID;
+                $string = "INSERT into Notifications(userID, info, date) values ($requesterID, \"You have been promoted to Data Manager level on the project {$_GET['action']}\", now())";
+                mysqli_query($con, $string);
             }
         } else {
             $validPromotion = false;
@@ -134,13 +162,19 @@ function lookupProjID2($projName) {
             $yourPerm = lookupUserPermission($_SESSION['currUser']['userID'], lookupProjID($_GET['action']));
             $targetsPerm = lookupUserPermission($_POST['textBox'], lookupProjID($_GET['action']));
 
-            if (($yourPerm == 3 AND $targetsPerm < 3) OR $yourSiteLevel > 1) { // cant demote another DM if you are a DM
+            //echo "You have site level " . $yourSiteLevel . " with project permission " . $yourPerm . ", your target demotee has perm" . $targetsperm;
+
+            if (($yourPerm == 5 AND $targetsPerm == 4) OR $yourSiteLevel > 1) { // cant demote another DM if you are a DM
                 $con = mysqli_connect('localhost', 'samcalab_chriswb', 'uz,vt78?zYpwu*CV6', 'samcalab_uniproject');
                 $projID = lookupProjID($_GET['action']);
                 $query = "UPDATE User_Projects SET permissions=3 WHERE userID={$_POST['textBox']} AND projID=$projID";
                 $result = mysqli_query($con, $query);
                 if ($result) {
                     $validDemotion = true;
+                    // create notification for the user that just been promoted
+                    $requesterID = $_POST['textBox'];
+                    $string = "INSERT into Notifications(userID, info, date) values ($requesterID, \"You have been demoted to Collaborator level on the project {$_GET['action']}\", now())";
+                    mysqli_query($con, $string);
                 } else {
                     $validDemotion = false;
                 }
@@ -184,6 +218,7 @@ function lookupProjID2($projName) {
                         <li><a href="ApproveRequests.php">Approve Requests</a></li>
                         <li><a href="PendingRequests.php">Pending Requests</a></li>
                         <li><a href="StorageRequest.php">Storage Request</a></li>
+                        <li><a href="Notifications.php">Notifications</a></li>
                         <br><br>
                         <li><a href="logout.php">Log out</a></li>
                     </ul>
